@@ -23,6 +23,17 @@ public class UserService {
         if (userEntity == null) {
             throw new RuntimeException("entity null");
         }
+
+        UserEntity existingUser = userRepository.findByUserid(userEntity.getUserid());
+        if (existingUser != null) {
+            throw new RuntimeException("아이디가 이미 존재합니다");
+        }
+
+        existingUser = userRepository.findByNickname(userEntity.getNickname());
+        if (existingUser != null) {
+            throw new RuntimeException("닉네임이 이미 존재합니다");
+        }
+
         String salt = new BigInteger(130, random).toString(32);
         String encodedPassword = passwordEncoder.encode(userEntity.getPassword() + salt);
 
