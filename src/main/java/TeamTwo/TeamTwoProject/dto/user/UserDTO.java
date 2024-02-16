@@ -9,11 +9,13 @@ import lombok.Setter;
 @Builder
 public class UserDTO {
 
-    private String user_id;
+    private int id;
+    private String userid;
     private String password;
     private String salt;
     private String email;
     private String nickname;
-    // private String image; ==== 이 부분 빼고 저장중
+    private String image;
+    private String token;
 
 }

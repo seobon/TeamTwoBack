@@ -3,22 +3,46 @@ package TeamTwo.TeamTwoProject.service.user;
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
-    // 회원가입 부분
-    public UserEntity create(UserEntity userEntity) {
-        // 로직 구현 할것!!!
-        return userRepository.save(userEntity);
+    private SecureRandom random = new SecureRandom();
+
+    public UserEntity signup(UserEntity userEntity) {
+        if (userEntity == null) {
+            throw new RuntimeException("entity null");
+        }
+        String salt = new BigInteger(130, random).toString(32);
+        String encodedPassword = passwordEncoder.encode(userEntity.getPassword() + salt);
+
+        UserEntity user = UserEntity.builder()
+                .userid(userEntity.getUserid())
+                .password(encodedPassword)
+                .salt(salt)
+                .email(userEntity.getEmail())
+                .nickname(userEntity.getNickname())
+                .image(userEntity.getImage())
+                .build();
+        return userRepository.save(user);
     }
 
-    // 회원 수정
-    // 회원 삭제
+    public UserEntity login(String userid, String password) {
+        UserEntity user = userRepository.findByUserid(userid);
 
-
+        if (user != null && passwordEncoder.matches(password + user.getSalt(), user.getPassword())) {
+            return user;
+        }
+        return null;
+    }
 }

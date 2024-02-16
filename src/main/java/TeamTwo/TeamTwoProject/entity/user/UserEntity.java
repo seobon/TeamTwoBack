@@ -15,9 +15,12 @@ import lombok.NoArgsConstructor;
 public class UserEntity {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.UUID) 번호가 아니므로 그닥 쑬 이유를 모르겠다...
-    @Column(name = "user_id", nullable = false)
-    private String user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private int id;
+
+    @Column(name = "userid", nullable = false)
+    private String userid;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -31,6 +34,6 @@ public class UserEntity {
     @Column(name = "nickname", nullable = false)
     private String nickname;
 
-//    @Column(name = "image")
-//    private String image;
+    @Column(name = "image")
+    private String image;
 }
