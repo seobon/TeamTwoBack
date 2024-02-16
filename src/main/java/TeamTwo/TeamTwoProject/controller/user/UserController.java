@@ -7,10 +7,12 @@ import TeamTwo.TeamTwoProject.security.TokenProvider;
 import TeamTwo.TeamTwoProject.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 //@Controller
@@ -38,7 +40,7 @@ public class UserController {
 
             UserEntity newUser = userService.signup(user);
             return ResponseEntity.ok().body("회원가입 성공");
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -50,18 +52,51 @@ public class UserController {
             if (user == null) {
                 throw new RuntimeException("로그인 실패");
             }
-                String token = tokenProvider.createToken(user);
-                UserDTO responseUserDTO = UserDTO.builder()
-                        .id(user.getId())
-                        .userid(user.getUserid())
-                        .email(user.getEmail())
-                        .nickname(user.getNickname())
-                        .token(token)
-                        .build();
-                return ResponseEntity.ok().body(responseUserDTO);
+            String token = tokenProvider.createToken(user);
+            UserDTO responseUserDTO = UserDTO.builder()
+                    .id(user.getId())
+                    .userid(user.getUserid())
+                    .email(user.getEmail())
+                    .nickname(user.getNickname())
+                    .token(token)
+                    .build();
+            return ResponseEntity.ok().body(responseUserDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // 회원 정보페이지 조회
+    @GetMapping("/profile/{userid}")
+    public ResponseEntity<UserEntity> getUser(@PathVariable("userid") String userid) {
+        UserEntity user = userService.getUser(userid);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(user);
+        }
+    }
+
+
+    // 회원 수정
+    @PatchMapping("/profile/{userid}")
+    public ResponseEntity<UserEntity> updateUser(
+            @PathVariable("userid") String userid,
+            @RequestParam("password") String password,
+            @RequestBody UserEntity userEntity
+    ) {
+        try {
+            UserEntity updateUser = userService.updateUser(userid, password, userEntity);
+            if (updateUser == null) {
+                return ResponseEntity.badRequest().build();
+            } else {
+                System.out.println(updateUser);
+                return ResponseEntity.ok(updateUser);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 
 }
