@@ -1,13 +1,17 @@
 package TeamTwo.TeamTwoProject.dto.user;
 
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
 
     private int id;
