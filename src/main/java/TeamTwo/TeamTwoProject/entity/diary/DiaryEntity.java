@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Entity
 @Builder
 @NoArgsConstructor
@@ -14,21 +16,33 @@ import lombok.NoArgsConstructor;
 @Table(name = "diary")
 public class DiaryEntity {
     @Id
-    @Column(name = "diary_id", nullable = true)
-    private int diary_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int diaryId;
 
-//    @Column(name = "user_id", nullable = false)
-//    private String user_id;
+    @Column(name = "id", nullable = false)
+    private String id;
 
-    @Column(name = "diary_title", nullable = false)
-    private String diary_title;
+    @Column(name = "diaryTitle", nullable = false)
+    private String diaryTitle;
 
-//    @Column(name = "diary_content", nullable = false)
-//    private String diary_content;
+    @Column(name = "diaryContent", nullable = false)
+    private String diaryContent;
 
-    @Column(name = "diary_file", nullable = false)
-    private String diary_file;
+    @Column(name = "mood", nullable = false)
+    private String mood;
 
-//    @Column(name = "diary_create", nullable = false)
-//    private String diary_create;
+    @Column(name = "createdAt", nullable = false)
+    private Timestamp createdAt;
+
+    @Column(name = "updatedAt")
+    private Timestamp updatedAt;
+
+    @Column(name = "location", nullable = false)
+    private String location;
+
+    @Column(name = "weather", nullable = false)
+    private int weather;
+
+    @Column(name = "isPublic", nullable = false)
+    private boolean isPublic;
 }
