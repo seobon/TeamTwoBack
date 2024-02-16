@@ -4,14 +4,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Getter
 @Setter
 @Builder
 public class DiaryDTO {
-    private int diary_id;
-//    private String user_id;
-    private String diary_title;
-//    private String diary_content;
-    private String diary_file;
-//    private String diary_create;
+    private int diaryId;
+    private String id;
+    private String diaryTitle;
+    private String diaryContent;
+    private String mood;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+    private String location;
+    private int weather;
+    private boolean isPublic;
 }
