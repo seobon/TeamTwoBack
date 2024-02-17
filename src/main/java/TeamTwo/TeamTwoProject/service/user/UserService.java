@@ -49,7 +49,6 @@ public class UserService {
                 .build();
         return userRepository.save(user);
     }
-
     public UserEntity login(String userid, String password) {
         UserEntity user = userRepository.findByUserid(userid);
 
