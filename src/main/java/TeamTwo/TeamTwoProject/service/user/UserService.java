@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -70,15 +71,15 @@ public class UserService {
     }
 
     //회원 수정
-    public UserEntity updateUser(String userid,  String password, UserEntity userEntity) {
+    public UserEntity updateUser(String userid, String currentPassword, String newPassword, Optional<String> newNickName) {
 
         try {
             // 현재 비밀번호가 맞으면 비밀번호 변경 가능하도록
             UserEntity user = userRepository.findByUserid(userid);
 
-            if(passwordEncoder.matches(password + user.getSalt(), user.getPassword())) {
+            if(passwordEncoder.matches(currentPassword + user.getSalt(), user.getPassword())) {
                 String newSalt = new BigInteger(130, random).toString(32);
-                String newEncodedPassword = passwordEncoder.encode(userEntity.getPassword() + newSalt);
+                String newEncodedPassword = passwordEncoder.encode(newPassword + newSalt);
 
                 UserEntity updateUser = UserEntity.builder()
                         .id(user.getId())
@@ -86,7 +87,7 @@ public class UserService {
                         .password(newEncodedPassword)
                         .salt(newSalt)
                         .email(user.getEmail())
-                        .nickname(userEntity.getNickname())
+                        .nickname(newNickName.orElse(user.getNickname())) // 닉네임이 변경이 없을 경우도 있으니까
                         .image(user.getImage())
                         .build();
                 System.out.println(updateUser);
@@ -99,4 +100,19 @@ public class UserService {
             return null;
         }
     }
+
+    // 회원 삭제
+//    public void deleteUser(String userid, String password) {
+//        try {
+//            UserEntity user = userRepository.findByUserid(userid);
+//
+//            if (user != null && passwordEncoder.matches(password + user.getSalt(), user.getPassword())) {
+//                userRepository.delete(user);
+//            } else {
+//                throw new RuntimeException("아이디 또는 비밀번호가 일치하지 않습니다.");
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException("사용자 삭제 중 오류가 발생했습니다.", e);
+//        }
+//    }
 }
