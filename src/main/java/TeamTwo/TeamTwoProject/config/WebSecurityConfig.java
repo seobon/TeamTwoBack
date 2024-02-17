@@ -40,8 +40,8 @@ public class WebSecurityConfig {
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(authorize->authorize
+                        .requestMatchers("/user/**", "/diary/**").permitAll()
 //                        .requestMatchers("/api/auth/refresh").permitAll()
-                        .requestMatchers("/user/**").permitAll()
                         .anyRequest().authenticated()
                 );
         http.addFilterAfter(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

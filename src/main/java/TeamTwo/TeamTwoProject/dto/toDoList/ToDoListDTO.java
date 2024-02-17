@@ -13,7 +13,7 @@ public class ToDoListDTO {
     private int todoId;
     private int id;
     private String todoContent;
-    private Timestamp createdAt;
+    private String createdAt;
     private String deadline;
     private String state;
 }
