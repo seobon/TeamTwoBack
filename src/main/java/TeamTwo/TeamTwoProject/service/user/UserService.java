@@ -2,6 +2,7 @@ package TeamTwo.TeamTwoProject.service.user;
 
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.repository.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 @Service
+@Slf4j
 public class UserService {
 
     @Autowired
@@ -56,4 +58,44 @@ public class UserService {
         return null;
     }
 
+    // 회원 정보 받아오기
+    public UserEntity getUser(String userId) {
+        try {
+            return userRepository.findByUserid(userId);
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+
+    //회원 수정
+    public UserEntity updateUser(String userid,  String password, UserEntity userEntity) {
+
+        try {
+            // 현재 비밀번호가 맞으면 비밀번호 변경 가능하도록
+            UserEntity user = userRepository.findByUserid(userid);
+
+            if(passwordEncoder.matches(password + user.getSalt(), user.getPassword())) {
+                String newSalt = new BigInteger(130, random).toString(32);
+                String newEncodedPassword = passwordEncoder.encode(userEntity.getPassword() + newSalt);
+
+                UserEntity updateUser = UserEntity.builder()
+                        .id(user.getId())
+                        .userid(user.getUserid())
+                        .password(newEncodedPassword)
+                        .salt(newSalt)
+                        .email(user.getEmail())
+                        .nickname(userEntity.getNickname())
+                        .image(user.getImage())
+                        .build();
+                System.out.println(updateUser);
+                return userRepository.save(updateUser);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 }
