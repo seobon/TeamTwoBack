@@ -2,6 +2,7 @@ package TeamTwo.TeamTwoProject.controller.user;
 
 
 import TeamTwo.TeamTwoProject.dto.user.UserDTO;
+import TeamTwo.TeamTwoProject.dto.user.UserUpdateDTO;
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.security.TokenProvider;
 import TeamTwo.TeamTwoProject.service.user.TokenBlacklistService;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+
+import java.util.Optional;
 
 //@Controller
 @RestController
@@ -110,11 +113,10 @@ public class UserController {
     @PatchMapping("/profile/{userid}")
     public ResponseEntity<UserEntity> updateUser(
             @PathVariable("userid") String userid,
-            @RequestParam("password") String password,
-            @RequestBody UserEntity userEntity
-    ) {
+            @RequestBody UserUpdateDTO userUpdateDTO
+            ) {
         try {
-            UserEntity updateUser = userService.updateUser(userid, password, userEntity);
+            UserEntity updateUser = userService.updateUser(userid, userUpdateDTO.getCurrentPassword(), userUpdateDTO.getNewPassword(), Optional.ofNullable(userUpdateDTO.getNewNickName()) );
             if (updateUser == null) {
                 return ResponseEntity.badRequest().build();
             } else {
@@ -125,6 +127,23 @@ public class UserController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    // 회원 삭제
+//    @DeleteMapping("delete/{userid}")
+//    public ResponseEntity<String> deleteUser(
+//            @PathVariable String userid,
+//            @RequestBody String password
+//    ) {
+//        try {
+//            userService.deleteUser(userid, password);
+//            return ResponseEntity.ok("회원이 삭제되었스므니다.");
+//
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//
+//        }
+//
+//    }
 
 
 }
