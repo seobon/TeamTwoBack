@@ -28,7 +28,7 @@ public class UserDTO {
     private String nickname;
 
     private String image;
-    private String token;
-
+    private String accessToken;
+    private String refreshToken;
     // 주석처리한건 나중에 확인해보고 쓰기
 }

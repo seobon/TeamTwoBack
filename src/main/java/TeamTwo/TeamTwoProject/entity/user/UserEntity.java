@@ -36,4 +36,5 @@ public class UserEntity {
 
     @Column(name = "image")
     private String image;
+
 }
