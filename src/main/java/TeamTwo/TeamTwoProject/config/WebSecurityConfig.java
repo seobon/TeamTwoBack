@@ -41,6 +41,7 @@ public class WebSecurityConfig {
 
                 .authorizeHttpRequests(authorize->authorize
                         .requestMatchers("/user/**", "/diary/**").permitAll()
+//                        .requestMatchers("/api/auth/refresh").permitAll()
                         .anyRequest().authenticated()
                 );
         http.addFilterAfter(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

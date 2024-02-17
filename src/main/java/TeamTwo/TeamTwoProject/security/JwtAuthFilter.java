@@ -1,5 +1,7 @@
 package TeamTwo.TeamTwoProject.security;
 
+import TeamTwo.TeamTwoProject.service.user.TokenBlacklistService;
+import TeamTwo.TeamTwoProject.service.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,12 +24,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
     TokenProvider tokenProvider;
+    @Autowired
+    TokenBlacklistService tokenBlacklistService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = getBearerToken(request);
 
             if (token != null && !token.equalsIgnoreCase("null")) {
+                if (tokenBlacklistService.isBlacklisted(token)) {
+                    throw new ServletException("블랙리스트에 있는 토큰입니다.");
+                }
+
                 String userId = tokenProvider.validateAndGetUserId(token);
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(String.valueOf(userId), null, AuthorityUtils.NO_AUTHORITIES);
@@ -49,4 +57,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         return null;
     }
+
 }
