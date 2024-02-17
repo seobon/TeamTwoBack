@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface ToDoListRepository extends JpaRepository<DiaryEntity, Integer> {
     // get
-    List<ToDoListRepository> findById(int id);
+    List<ToDoListRepository> findByUserId(Integer userId);
 }

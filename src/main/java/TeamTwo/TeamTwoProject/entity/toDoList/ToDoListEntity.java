@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Entity
 @Builder
 @NoArgsConstructor
@@ -17,17 +15,17 @@ import java.sql.Timestamp;
 public class ToDoListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "todoId")
+    @Column(name = "todoId", nullable = false)
     private int todoId;
 
-    @Column(name = "id", nullable = false)
-    private int id;
+    @Column(name = "userId", nullable = false)
+    private int userId;
 
     @Column(name = "todoContent", nullable = false)
     private String todoContent;
 
     @Column(name = "createdAt", nullable = false)
-    private Timestamp createdAt;
+    private String createdAt;
 
     @Column(name = "deadline")
     private String deadline;

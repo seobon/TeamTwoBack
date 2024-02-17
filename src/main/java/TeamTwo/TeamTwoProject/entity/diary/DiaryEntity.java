@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Entity
 @Builder
 @NoArgsConstructor
@@ -17,10 +15,11 @@ import java.sql.Timestamp;
 public class DiaryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "diaryId", nullable = false)
     private int diaryId;
 
-    @Column(name = "id", nullable = false)
-    private String id;
+    @Column(name = "userId", nullable = false)
+    private int userId;
 
     @Column(name = "diaryTitle", nullable = false)
     private String diaryTitle;
@@ -32,10 +31,10 @@ public class DiaryEntity {
     private String mood;
 
     @Column(name = "createdAt", nullable = false)
-    private Timestamp createdAt;
+    private String createdAt;
 
     @Column(name = "updatedAt")
-    private Timestamp updatedAt;
+    private String updatedAt;
 
     @Column(name = "location", nullable = false)
     private String location;

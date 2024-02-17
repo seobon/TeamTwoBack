@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class ReactionDTO {
     private int reactionId;
     private int diaryId;
-    private int id;
+    private int userId;
     private boolean likey;
     private boolean love;
     private boolean haha;

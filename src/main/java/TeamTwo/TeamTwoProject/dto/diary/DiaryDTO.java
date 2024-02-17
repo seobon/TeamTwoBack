@@ -15,8 +15,8 @@ public class DiaryDTO {
     private String diaryTitle;
     private String diaryContent;
     private String mood;
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private String createdAt;
+    private String updatedAt;
     private String location;
     private int weather;
     private boolean isPublic;

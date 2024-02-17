@@ -6,14 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Table(name = "diary")
+@Table(name = "reaction")
 public class ReactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +21,8 @@ public class ReactionEntity {
     @Column(name = "diaryId", nullable = false)
     private int diaryId;
 
-    @Column(name = "id", nullable = false)
-    private int id;
+    @Column(name = "userId", nullable = false)
+    private int userId;
 
     @Column(name = "likey", nullable = false)
     private boolean likey;
