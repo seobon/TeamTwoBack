@@ -8,8 +8,10 @@ import java.util.List;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
+    // postDiary
+
     // getCalendar
-    List<DiaryEntity> findByUserIdAndCreatedAtLike(Integer userId, String createdAt);
+    List<DiaryEntity> findByUserIdAndCreatedAtContaining(Integer userId, String createdAt);
 
     // getMyDiary & getOneDiary
     List<DiaryEntity> findByDiaryId(Integer diaryId);
@@ -18,5 +20,5 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
     List<DiaryEntity> findByIsPublic(boolean isPublic);
 
     // search
-    List<DiaryEntity> findByDiaryTitleLikeOrDiaryContentLike(String diaryTitle, String diaryContent);
+    List<DiaryEntity> findByDiaryTitleContainingOrDiaryContentContaining(String diaryTitle, String diaryContent);
 }
