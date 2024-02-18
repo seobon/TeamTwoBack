@@ -22,6 +22,11 @@ public class DiaryService {
 //                        .diaryId(getCalendarData.get)
 //        getCalendarResult.add(diaryDTO);
 
+//        for (DiaryEntity CalendarData : getCalendarData) {
+//            DiaryDTO diaryDTO = DiaryDTO.bi
+//            getCalendarResult.add(diaryDTO);
+//        }
+
         for (DiaryEntity CalendarData : getCalendarData) {
             DiaryDTO diaryDTO = DiaryDTO.builder()
                     .diaryId(CalendarData.getDiaryId())

@@ -18,9 +18,13 @@ public class ReactionEntity {
     @Column(name = "reactionId")
     private int reactionId;
 
+//    @ManyToOne
+//    @JoinColumn(name = "diaryId", nullable = false)
     @Column(name = "diaryId", nullable = false)
     private int diaryId;
 
+//    @ManyToOne
+//    @JoinColumn(name = "userId", nullable = false)
     @Column(name = "userId", nullable = false)
     private int userId;
 
