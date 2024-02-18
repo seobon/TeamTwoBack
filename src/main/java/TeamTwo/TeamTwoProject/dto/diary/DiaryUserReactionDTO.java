@@ -4,12 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
 @Getter
 @Setter
 @Builder
-public class DiaryDTO {
+public class DiaryUserReactionDTO {
     private int diaryId;
     private String id;
     private String diaryTitle;
