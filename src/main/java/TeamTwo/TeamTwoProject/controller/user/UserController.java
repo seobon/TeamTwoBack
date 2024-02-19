@@ -129,21 +129,21 @@ public class UserController {
     }
 
     // 회원 삭제
-//    @DeleteMapping("delete/{userid}")
-//    public ResponseEntity<String> deleteUser(
-//            @PathVariable String userid,
-//            @RequestBody String password
-//    ) {
-//        try {
-//            userService.deleteUser(userid, password);
-//            return ResponseEntity.ok("회원이 삭제되었스므니다.");
-//
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-//
-//        }
-//
-//    }
+    @DeleteMapping("/profile/{userid}/delete")
+    public ResponseEntity<String> deleteUser(
+            @PathVariable String userid,
+            @RequestBody UserUpdateDTO userUpdateDTO
+    ) {
+        try {
+            userService.deleteUser(userid, userUpdateDTO.getCurrentPassword());
+            return ResponseEntity.ok("회원이 삭제되었스므니다.");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+
+        }
+
+    }
 
 
 }

@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(authorize->authorize
-                        .requestMatchers("/user/**", "/diary/**").permitAll()
+                        .requestMatchers("/user/**", "/diary/**","/mail/**").permitAll()
 //                        .requestMatchers("/api/auth/refresh").permitAll()
                         .anyRequest().authenticated()
                 );
