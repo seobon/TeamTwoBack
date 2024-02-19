@@ -18,6 +18,8 @@ public class ToDoListEntity {
     @Column(name = "todoId", nullable = false)
     private int todoId;
 
+//    @ManyToOne
+//    @JoinColumn(name = "userId", nullable = false)
     @Column(name = "userId", nullable = false)
     private int userId;
 

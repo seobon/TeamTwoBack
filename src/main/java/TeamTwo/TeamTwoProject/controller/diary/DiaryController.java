@@ -3,7 +3,6 @@ package TeamTwo.TeamTwoProject.controller.diary;
 import TeamTwo.TeamTwoProject.dto.diary.DiaryDTO;
 import TeamTwo.TeamTwoProject.service.diary.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +14,8 @@ public class DiaryController {
     DiaryService diaryService;
 
     @GetMapping("/getCalendar")
-    public List<DiaryDTO> getCalendar(@RequestParam int userId, @RequestParam String createdAt){
+    public List<DiaryDTO> getCalendar(@RequestParam int userId, @RequestParam String month){
+        String createdAt = "-" + month + "-";
         List<DiaryDTO> result = diaryService.getCalendar(userId, createdAt);
         return result;
     }
@@ -39,8 +39,8 @@ public class DiaryController {
     }
 
     @GetMapping("/search")
-    public List<DiaryDTO> search(String diaryTitle, String diaryContent){
-        List<DiaryDTO> result = diaryService.search(diaryTitle, diaryContent);
+    public List<DiaryDTO> search(String searchWord){
+        List<DiaryDTO> result = diaryService.search(searchWord);
         return result;
     }
 }
