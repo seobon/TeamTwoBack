@@ -8,6 +8,9 @@ import lombok.Setter;
 @Setter
 @Builder
 public class DiaryUserReactionDTO {
+    private String nickname;
+    private String image;
+
     private int diaryId;
     private String id;
     private String diaryTitle;
@@ -18,6 +21,13 @@ public class DiaryUserReactionDTO {
     private String location;
     private int weather;
     private boolean isPublic;
+
+    private int likey;
+    private int love;
+    private int haha;
+    private int wow;
+    private int sad;
+    private int angry;
 
     private String msg;
 }

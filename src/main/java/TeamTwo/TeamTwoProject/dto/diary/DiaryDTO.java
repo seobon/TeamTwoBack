@@ -1,5 +1,6 @@
 package TeamTwo.TeamTwoProject.dto.diary;
 
+import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 @Builder
 public class DiaryDTO {
     private int diaryId;
-    private String id;
+    private int id;
     private String diaryTitle;
     private String diaryContent;
     private String mood;

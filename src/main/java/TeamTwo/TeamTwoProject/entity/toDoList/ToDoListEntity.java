@@ -1,5 +1,6 @@
 package TeamTwo.TeamTwoProject.entity.toDoList;
 
+import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +19,10 @@ public class ToDoListEntity {
     @Column(name = "todoId", nullable = false)
     private int todoId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "userId", nullable = false)
-    @Column(name = "userId", nullable = false)
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+//    @Column(name = "id", nullable = false)
+    private UserEntity id;
 
     @Column(name = "todoContent", nullable = false)
     private String todoContent;

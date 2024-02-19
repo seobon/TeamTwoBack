@@ -1,27 +1,32 @@
 package TeamTwo.TeamTwoProject.entity.diary;
 
+import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "diary")
 public class DiaryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "diaryId", nullable = false)
+    @Column(name = "diaryId", nullable = false, unique = true)
     private int diaryId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "userId", nullable = false)
-    @Column(name = "userId", nullable = false)
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+//    @Column(name = "id", nullable = false)
+    private UserEntity id;
 
     @Column(name = "diaryTitle", nullable = false)
     private String diaryTitle;
@@ -32,9 +37,11 @@ public class DiaryEntity {
     @Column(name = "mood", nullable = false)
     private String mood;
 
+    @CreatedDate
     @Column(name = "createdAt", nullable = false)
     private String createdAt;
 
+    @LastModifiedDate
     @Column(name = "updatedAt")
     private String updatedAt;
 
@@ -46,4 +53,7 @@ public class DiaryEntity {
 
     @Column(name = "isPublic", nullable = false)
     private boolean isPublic;
+
+//    @Column(name = "nickname")
+//    private String nickname;
 }

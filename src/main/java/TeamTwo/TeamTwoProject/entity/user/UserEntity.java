@@ -1,10 +1,14 @@
 package TeamTwo.TeamTwoProject.entity.user;
 
+import TeamTwo.TeamTwoProject.dto.diary.DiaryDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -12,10 +16,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Table(name = "user")
+
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "id", nullable = false)
     private int id;
 
@@ -37,4 +43,6 @@ public class UserEntity {
     @Column(name = "image")
     private String image;
 
+//    @OneToMany(mappedBy = "userMap")
+//    List<DiaryDTO> diaryDTOS = new ArrayList<>();
 }
