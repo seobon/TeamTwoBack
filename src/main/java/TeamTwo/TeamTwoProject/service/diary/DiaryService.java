@@ -1,7 +1,10 @@
 package TeamTwo.TeamTwoProject.service.diary;
 
 import TeamTwo.TeamTwoProject.dto.diary.DiaryDTO;
+import TeamTwo.TeamTwoProject.dto.diary.DiaryUserDTO;
+import TeamTwo.TeamTwoProject.dto.diary.DiaryUserReactionDTO;
 import TeamTwo.TeamTwoProject.entity.diary.DiaryEntity;
+import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.repository.diary.DiaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +20,8 @@ public class DiaryService {
 //    public boolean postDiary() {
 //    }
 
-    public List<DiaryDTO> getCalendar(int userId, String createdAt) {
-        List<DiaryEntity> getCalendarData = diaryRepository.findByUserIdAndCreatedAtContaining(userId, createdAt);
+    public List<DiaryDTO> getCalendar(UserEntity id, String createdAt) {
+        List<DiaryEntity> getCalendarData = diaryRepository.findByIdAndCreatedAtContaining(id, createdAt);
         List<DiaryDTO> getCalendarResult = new ArrayList<>();
 
         if(getCalendarData.size()!=0) {
@@ -40,15 +43,17 @@ public class DiaryService {
         return getCalendarResult;
     }
 
-    public List<DiaryDTO> getMyDiary(int diaryId) {
+    public List<DiaryUserReactionDTO> getMyDiary(int diaryId) {
         List<DiaryEntity> getMyDiaryData = diaryRepository.findByDiaryId(diaryId);
-        List<DiaryDTO> getMyDiaryResult = new ArrayList<>();
+//        List<DiaryEntity> getMyDiaryData = diaryRepository.findDiaryWithUserInfo(diaryId);
+        List<DiaryUserReactionDTO> getMyDiaryResult = new ArrayList<>();
             // 리더님 여기 유저 테이블(리액션 테이블도)의 정보를 조인해서 가져오고 싶은데 어떤 방식을 사용해야 할까요
             // 1. DiaryRepository 에서 조인하는 기본규칙을 사용한다(그런 기본 규칙이 있는지는 모르겠습니다.)
             // ex) DiaryRepository
             // List<DiaryEntity> id로유저테이블에접근하는기본규칙~~~~(int id, Timestamp createdAt);
             // 1 번이랍니다. 다만 보통 그런 경우 DTO를 따로 만드는 경우도 있다고 하네요
-            DiaryDTO diaryDTO = DiaryDTO.builder()
+        DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
+//                    .nickname(getMyDiaryData.get(0).getNickname())
                     .diaryTitle(getMyDiaryData.get(0).getDiaryTitle())
                     .diaryContent(getMyDiaryData.get(0).getDiaryContent())
                     .mood(getMyDiaryData.get(0).getMood())
@@ -58,53 +63,69 @@ public class DiaryService {
                     .weather(getMyDiaryData.get(0).getWeather())
                     .isPublic(getMyDiaryData.get(0).isPublic())
                     .build();
-            getMyDiaryResult.add(diaryDTO);
+            getMyDiaryResult.add(diaryUserReactionDTO);
         return getMyDiaryResult;
     }
 
-    public List<DiaryDTO> getEveryDiary(boolean isPublic) {
+    public DiaryEntity postDiary(DiaryDTO diaryDTO) {
+        UserEntity userEntityId = UserEntity.builder()
+                .id(diaryDTO.getId())
+                .build();
+        DiaryEntity postDiaryData = DiaryEntity.builder()
+                .id(userEntityId)
+                .diaryTitle(diaryDTO.getDiaryTitle())
+                .diaryContent(diaryDTO.getDiaryContent())
+                .mood(diaryDTO.getMood())
+                .location(diaryDTO.getLocation())
+                .isPublic(diaryDTO.isPublic())
+                .build();
+        return diaryRepository.save(postDiaryData);
+//        return postDiaryData;
+    }
+
+    public List<DiaryUserDTO> getEveryDiary(boolean isPublic) {
         List<DiaryEntity> getEveryDiaryData = diaryRepository.findByIsPublic(isPublic);
-        List<DiaryDTO> getEveryDiaryResult = new ArrayList<>();
+        List<DiaryUserDTO> getEveryDiaryResult = new ArrayList<>();
 
         for (DiaryEntity DiaryData : getEveryDiaryData) {
-            DiaryDTO diaryDTO = DiaryDTO.builder()
+            DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
                     .diaryId(DiaryData.getDiaryId())
                     .diaryTitle(DiaryData.getDiaryTitle())
                     .diaryContent(DiaryData.getDiaryContent())
                     .build();
-            getEveryDiaryResult.add(diaryDTO);
+            getEveryDiaryResult.add(diaryUserDTO);
         }
         return getEveryDiaryResult;
     }
 
-    public List<DiaryDTO> getOneDiary(int diaryId) {
+    public List<DiaryUserReactionDTO> getOneDiary(int diaryId) {
         List<DiaryEntity> getOneDiaryData = diaryRepository.findByDiaryId(diaryId);
-        List<DiaryDTO> getOneDiaryResult = new ArrayList<>();
+        List<DiaryUserReactionDTO> getOneDiaryResult = new ArrayList<>();
 
         for (DiaryEntity DiaryData : getOneDiaryData) {
-            DiaryDTO diaryDTO = DiaryDTO.builder()
+            DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
                     .diaryTitle(DiaryData.getDiaryTitle())
                     .diaryContent(DiaryData.getDiaryContent())
                     .build();
-            getOneDiaryResult.add(diaryDTO);
+            getOneDiaryResult.add(diaryUserReactionDTO);
         }
         return getOneDiaryResult;
     }
 
-    public List<DiaryDTO> search(String searchWord) {
+    public List<DiaryUserDTO> search(String searchWord) {
         String diaryTitle = searchWord;
         String diaryContent = searchWord;
 
         List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
-        List<DiaryDTO> searchResult = new ArrayList<>();
+        List<DiaryUserDTO> searchResult = new ArrayList<>();
 
         for (DiaryEntity DiaryData : searchData) {
-            DiaryDTO diaryDTO = DiaryDTO.builder()
+            DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
                     .diaryId(DiaryData.getDiaryId())
                     .diaryTitle(DiaryData.getDiaryTitle())
                     .diaryContent(DiaryData.getDiaryContent())
                     .build();
-            searchResult.add(diaryDTO);
+            searchResult.add(diaryUserDTO);
         }
         return searchResult;
     }

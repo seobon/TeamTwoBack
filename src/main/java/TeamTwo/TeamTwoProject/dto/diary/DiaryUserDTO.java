@@ -22,12 +22,5 @@ public class DiaryUserDTO {
     private int weather;
     private boolean isPublic;
 
-    private int likey;
-    private int love;
-    private int haha;
-    private int wow;
-    private int sad;
-    private int angry;
-
     private String msg;
 }
