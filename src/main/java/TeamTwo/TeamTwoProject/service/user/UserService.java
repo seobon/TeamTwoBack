@@ -101,17 +101,18 @@ public class UserService {
     }
 
     // 회원 삭제
-//    public void deleteUser(String userid, String password) {
-//        try {
-//            UserEntity user = userRepository.findByUserid(userid);
-//
-//            if (user != null && passwordEncoder.matches(password + user.getSalt(), user.getPassword())) {
-//                userRepository.delete(user);
-//            } else {
-//                throw new RuntimeException("아이디 또는 비밀번호가 일치하지 않습니다.");
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException("사용자 삭제 중 오류가 발생했습니다.", e);
-//        }
-//    }
+    public void deleteUser(String userid, String currentPassword) {
+        try {
+            UserEntity user = userRepository.findByUserid(userid);
+
+            if (user != null && passwordEncoder.matches(currentPassword + user.getSalt(), user.getPassword())) {
+                userRepository.delete(user);
+            } else {
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException("사용자 삭제 중 오류가 발생했습니다.");
+        }
+    }
 }
