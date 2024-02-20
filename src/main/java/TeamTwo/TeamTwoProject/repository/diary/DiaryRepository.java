@@ -14,12 +14,10 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
     // postDiary
 
     // getCalendar
-    List<DiaryEntity> findByIdAndCreatedAtContaining(UserEntity id, String createdAt);
+    List<DiaryEntity> findByCreatedAtContainingAndUser_id(String createdAt, Integer id);
 
     // getMyDiary & getOneDiary
     List<DiaryEntity> findByDiaryId(Integer diaryId);
-//    @Query(nativeQuery = true, value = "SELECT d.*, u.nickname, u.email FROM diary d JOIN user u ON d.userId = u.id WHERE d.diaryId = :diaryId")
-//    List<DiaryEntity> findDiaryWithUserInfo(@Param("diaryId") Integer diaryId);
 
     // postDiary
 

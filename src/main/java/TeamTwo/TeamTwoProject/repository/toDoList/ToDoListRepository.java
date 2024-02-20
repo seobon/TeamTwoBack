@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Repository
-public interface ToDoListRepository extends JpaRepository<DiaryEntity, Integer> {
-    // get
-    List<ToDoListRepository> findById(UserEntity id);
-}
+//@Repository
+//public interface ToDoListRepository extends JpaRepository<ToDoListRepository, Integer> {
+//    // get
+////    List<ToDoListRepository> findById(Integer id);
+//}
