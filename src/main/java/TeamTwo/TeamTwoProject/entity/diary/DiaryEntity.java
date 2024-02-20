@@ -23,7 +23,7 @@ public class DiaryEntity {
     @Column(name = "diaryId", nullable = false, unique = true)
     private int diaryId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", nullable = false)
     private UserEntity user;
 

@@ -11,16 +11,13 @@ import java.util.List;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
-    // postDiary
-
     // getCalendar
     List<DiaryEntity> findByCreatedAtContainingAndUser_id(String createdAt, Integer id);
 
     // getMyDiary & getOneDiary
-    List<DiaryEntity> findByDiaryId(Integer diaryId);
+    DiaryEntity findByDiaryId(Integer diaryId);
 
     // postDiary
-
 
     // getEveryDiary
     List<DiaryEntity> findByIsPublic(boolean isPublic);

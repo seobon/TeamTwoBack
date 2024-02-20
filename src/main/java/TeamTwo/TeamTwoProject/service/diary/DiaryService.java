@@ -8,13 +8,17 @@ import TeamTwo.TeamTwoProject.entity.reaction.ReactionEntity;
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.repository.diary.DiaryRepository;
 import TeamTwo.TeamTwoProject.repository.reaction.ReactionRepository;
+import TeamTwo.TeamTwoProject.repository.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Slf4j
 public class DiaryService {
     @Autowired
     private DiaryRepository diaryRepository;
@@ -22,8 +26,8 @@ public class DiaryService {
     @Autowired
     private ReactionRepository reactionRepository;
 
-//    public boolean postDiary() {
-//    }
+    @Autowired
+    private UserRepository userRepository;
 
     public List<DiaryDTO> getCalendar(int id, String createdAt) {
         List<DiaryEntity> getCalendarData = diaryRepository.findByCreatedAtContainingAndUser_id(createdAt, id);
@@ -48,7 +52,7 @@ public class DiaryService {
         return getCalendarResult;
     }
 
-    public List<DiaryUserReactionDTO> getMyDiary(int diaryId) {
+    public DiaryUserReactionDTO getMyDiary(int diaryId) {
         boolean likey = true;
         List<ReactionEntity> getMyDiaryLikeyData = reactionRepository.findByLikeyAndDiary_diaryId(likey, diaryId);
         boolean love = true;
@@ -62,20 +66,19 @@ public class DiaryService {
         boolean angry = true;
         List<ReactionEntity> getMyDiaryAngryData = reactionRepository.findByAngryAndDiary_diaryId(angry, diaryId);
 
-        List<DiaryEntity> getMyDiaryData = diaryRepository.findByDiaryId(diaryId);
-        List<DiaryUserReactionDTO> getMyDiaryResult = new ArrayList<>();
+        DiaryEntity getMyDiaryData = diaryRepository.findByDiaryId(diaryId);
         DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
-                .nickname(getMyDiaryData.get(0).getUser().getNickname())
-                .image(getMyDiaryData.get(0).getUser().getImage())
-                .diaryId(getMyDiaryData.get(0).getDiaryId())
-                .diaryTitle(getMyDiaryData.get(0).getDiaryTitle())
-                .diaryContent(getMyDiaryData.get(0).getDiaryContent())
-                .mood(getMyDiaryData.get(0).getMood())
-                .createdAt(getMyDiaryData.get(0).getCreatedAt())
-                .updatedAt(getMyDiaryData.get(0).getUpdatedAt())
-                .location(getMyDiaryData.get(0).getLocation())
-                .weather(getMyDiaryData.get(0).getWeather())
-                .isPublic(getMyDiaryData.get(0).isPublic())
+                .nickname(getMyDiaryData.getUser().getNickname())
+                .image(getMyDiaryData.getUser().getImage())
+                .diaryId(getMyDiaryData.getDiaryId())
+                .diaryTitle(getMyDiaryData.getDiaryTitle())
+                .diaryContent(getMyDiaryData.getDiaryContent())
+                .mood(getMyDiaryData.getMood())
+                .createdAt(getMyDiaryData.getCreatedAt())
+                .updatedAt(getMyDiaryData.getUpdatedAt())
+                .location(getMyDiaryData.getLocation())
+                .weather(getMyDiaryData.getWeather())
+                .isPublic(getMyDiaryData.isPublic())
                 .likey(getMyDiaryLikeyData.size())
                 .love(getMyDiaryLoveData.size())
                 .haha(getMyDiaryHahaData.size())
@@ -84,24 +87,20 @@ public class DiaryService {
                 .angry(getMyDiaryAngryData.size())
                 .msg("Get My Diary Success")
                 .build();
-            getMyDiaryResult.add(diaryUserReactionDTO);
-        return getMyDiaryResult;
+        return diaryUserReactionDTO;
     }
 
     public DiaryEntity postDiary(DiaryDTO diaryDTO) {
-        UserEntity userEntityId = UserEntity.builder()
-                .id(diaryDTO.getId())
-                .build();
+        UserEntity userEntity = userRepository.findById(diaryDTO.getId());
         DiaryEntity postDiaryData = DiaryEntity.builder()
-//                .id(userEntityId)
                 .diaryTitle(diaryDTO.getDiaryTitle())
                 .diaryContent(diaryDTO.getDiaryContent())
                 .mood(diaryDTO.getMood())
                 .location(diaryDTO.getLocation())
                 .isPublic(diaryDTO.isPublic())
+                .user(userEntity)
                 .build();
         return diaryRepository.save(postDiaryData);
-//        return postDiaryData;
     }
 
     public List<DiaryUserDTO> getEveryDiary() {
@@ -124,7 +123,7 @@ public class DiaryService {
         return getEveryDiaryResult;
     }
 
-    public List<DiaryUserReactionDTO> getOneDiary(int diaryId) {
+    public DiaryUserReactionDTO getOneDiary(int diaryId) {
         boolean likey = true;
         List<ReactionEntity> getOneDiaryLikeyData = reactionRepository.findByLikeyAndDiary_diaryId(likey, diaryId);
         boolean love = true;
@@ -138,27 +137,24 @@ public class DiaryService {
         boolean angry = true;
         List<ReactionEntity> getOneDiaryAngryData = reactionRepository.findByAngryAndDiary_diaryId(angry, diaryId);
 
-        List<DiaryEntity> getOneDiaryData = diaryRepository.findByDiaryId(diaryId);
-        List<DiaryUserReactionDTO> getOneDiaryResult = new ArrayList<>();
+        DiaryEntity getOneDiaryData = diaryRepository.findByDiaryId(diaryId);
 
-        for (DiaryEntity DiaryData : getOneDiaryData) {
-            DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
-                    .nickname(DiaryData.getUser().getNickname())
-                    .image(DiaryData.getUser().getImage())
-                    .diaryId(DiaryData.getDiaryId())
-                    .diaryTitle(DiaryData.getDiaryTitle())
-                    .diaryContent(DiaryData.getDiaryContent())
-                    .likey(getOneDiaryLikeyData.size())
-                    .love(getOneDiaryLoveData.size())
-                    .haha(getOneDiaryHahaData.size())
-                    .wow(getOneDiaryWowData.size())
-                    .sad(getOneDiarySadData.size())
-                    .angry(getOneDiaryAngryData.size())
-                    .msg("Get One Diary Success")
-                    .build();
-            getOneDiaryResult.add(diaryUserReactionDTO);
-        }
-        return getOneDiaryResult;
+        DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
+                .nickname(getOneDiaryData.getUser().getNickname())
+                .image(getOneDiaryData.getUser().getImage())
+                .diaryId(getOneDiaryData.getDiaryId())
+                .diaryTitle(getOneDiaryData.getDiaryTitle())
+                .diaryContent(getOneDiaryData.getDiaryContent())
+                .likey(getOneDiaryLikeyData.size())
+                .love(getOneDiaryLoveData.size())
+                .haha(getOneDiaryHahaData.size())
+                .wow(getOneDiaryWowData.size())
+                .sad(getOneDiarySadData.size())
+                .angry(getOneDiaryAngryData.size())
+                .msg("Get One Diary Success")
+                .build();
+
+        return diaryUserReactionDTO;
     }
 
     public List<DiaryUserDTO> search(String searchWord) {
@@ -182,13 +178,23 @@ public class DiaryService {
         return searchResult;
     }
 
-//    public boolean patchDiary() {
-//    }
-//
+    public DiaryEntity patchDiary(DiaryDTO diaryDTO) {
+        DiaryEntity OriginDiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
+
+        DiaryEntity patchDiaryData = DiaryEntity.builder()
+                .user(OriginDiaryData.getUser())
+                .diaryId(OriginDiaryData.getDiaryId())
+                .diaryTitle(Optional.ofNullable(diaryDTO.getDiaryTitle()).orElse(OriginDiaryData.getDiaryTitle()))
+                .diaryContent(Optional.ofNullable(diaryDTO.getDiaryContent()).orElse(OriginDiaryData.getDiaryContent()))
+                .mood(Optional.ofNullable(diaryDTO.getMood()).orElse(OriginDiaryData.getMood()))
+                .createdAt(OriginDiaryData.getCreatedAt())
+                .location(Optional.ofNullable(diaryDTO.getLocation()).orElse(OriginDiaryData.getLocation()))
+                .weather(Optional.ofNullable(diaryDTO.getWeather()).orElse(OriginDiaryData.getWeather()))
+                .isPublic(Optional.of(diaryDTO.isPublic()).orElse(OriginDiaryData.isPublic()))
+                .build();
+        return diaryRepository.save(patchDiaryData);
+    }
+
 //    public boolean deleteDiary() {
 //    }
-//
-//    public boolean reaction() {
-//    }
-
 }
