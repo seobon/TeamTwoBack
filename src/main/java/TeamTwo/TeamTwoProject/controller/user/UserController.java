@@ -36,6 +36,7 @@ public class UserController {
     @Autowired
     TokenBlacklistService tokenBlacklistService;
 
+    // 회원가입
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDTO userDTO) {
         try {
@@ -54,6 +55,7 @@ public class UserController {
         }
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(HttpSession session, @RequestBody UserDTO userDTO) {
         try {
@@ -79,6 +81,7 @@ public class UserController {
         }
     }
 
+    // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader(value="Authorization") String token,
                                     @RequestHeader(value="Refresh-Token") String refreshToken) {
@@ -96,6 +99,18 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // 이미지 업로드
+    @PostMapping("/image/{id}")
+    public ResponseEntity<?> uploadImage(@PathVariable int id, @RequestParam("image") MultipartFile image) {
+        try {
+            userService.saveImage(id, image);
+            return ResponseEntity.ok().body("이미지 업로드 성공");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     // 회원 정보페이지 조회
     @GetMapping("/profile/{userid}")

@@ -6,10 +6,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Optional;
+import java.lang.Exception;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -22,6 +31,7 @@ public class UserService {
 
     private SecureRandom random = new SecureRandom();
 
+    // 회원가입
     public UserEntity signup(UserEntity userEntity) {
         if (userEntity == null) {
             throw new RuntimeException("entity null");
@@ -50,6 +60,7 @@ public class UserService {
                 .build();
         return userRepository.save(user);
     }
+    // 로그인
     public UserEntity login(String userid, String password) {
         UserEntity user = userRepository.findByUserid(userid);
 
@@ -57,6 +68,65 @@ public class UserService {
             return user;
         }
         return null;
+    }
+
+    // 이미지 저장
+    public void saveImage(int id, MultipartFile image) throws Exception {
+        Optional<UserEntity> optionalUser = Optional.ofNullable(userRepository.findById(id));
+
+        // 이미지 파일을 저장할 디렉토리 ( 각자의 경로로 수정해야함)
+        Path uploadDir = Paths.get("/Users/kyoungdolee/Desktop/TeamTwoBack/src/main/resources/static/images");
+
+        // 디렉토리가 없으면 생성
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+
+        if (!optionalUser.isPresent()) {
+            throw new Exception("사용자를 찾을 수 없습니다.");
+        }
+
+        UserEntity user = optionalUser.get();
+
+        String imageName = saveImageFile(image);  // 이미지 파일을 저장하고 이미지 이름을 반환하는 메소드
+
+        user = user.toBuilder().image(imageName).build();
+        userRepository.save(user);
+    }
+    // 이미지 파일체크
+    public String saveImageFile(MultipartFile image) throws Exception {
+        // 파일이 비어있는지 확인
+        if (image.isEmpty()) {
+            throw new Exception("파일이 비어있습니다.");
+        }
+
+        // 파일 크기가 5MB 이하인지 확인
+        if (image.getSize() > 5 * 1024 * 1024) { // 5MB
+            throw new Exception("파일 크기가 너무 큽니다. 5MB 이하의 파일만 업로드 가능합니다.");
+        }
+
+        // 파일이 이미지인지 확인
+        String contentType = image.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new Exception("이미지 파일만 업로드 가능합니다.");
+        }
+
+        // 이미지 파일을 저장할 디렉토리
+        Path uploadDir = Paths.get("images");
+
+        // 디렉토리가 없으면 생성
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+
+        // 파일 이름 (원본 파일 이름에 UUID를 추가)
+        String filename = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+
+        // 파일을 디렉토리에 저장
+        Path filePath = uploadDir.resolve(filename);
+        image.transferTo(filePath.toFile());
+
+        return filename;
     }
 
     // 회원 정보 받아오기
