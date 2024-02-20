@@ -3,6 +3,7 @@ package TeamTwo.TeamTwoProject.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,10 +13,12 @@ import java.net.URL;
 
 public class WeatherApi {
 
-    private static final String GEOLOCATION_API_KEY = "YOUR_GOOGLE_GEOLOCATION_API_KEY";
-    private static final String OPENWEATHERMAP_API_KEY = "YOUR_OPENWEATHERMAP_API_KEY";
-    private static final String GEOLOCATION_API_URL = "https://www.googleapis.com/geolocation/v1/geolocate?key=%s";
-    private static final String OPENWEATHERMAP_API_URL = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s";
+    @Value("${GOOGLE_GEOLOCATION_API_KEY}")
+    private static String GOOGLE_GEOLOCATION_API_KEY;
+    @Value("${OPENWEATHERMAP_API_KEY}")
+    private static String OPENWEATHERMAP_API_KEY;
+    private static String GOOGLE_GEOLOCATION_API_URL = "https://www.googleapis.com/geolocation/v1/geolocate?key=%s";
+    private static String OPENWEATHERMAP_API_URL = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s";
 
     public static void main(String[] args) {
         try {
@@ -33,7 +36,7 @@ public class WeatherApi {
     }
 
     private static double[] getCurrentLocation() throws IOException {
-        String apiUrl = String.format(GEOLOCATION_API_URL, GEOLOCATION_API_KEY);
+        String apiUrl = String.format(GOOGLE_GEOLOCATION_API_URL, GOOGLE_GEOLOCATION_API_KEY);
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
