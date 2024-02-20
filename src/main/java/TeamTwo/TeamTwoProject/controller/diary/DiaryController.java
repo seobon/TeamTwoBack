@@ -20,7 +20,7 @@ public class DiaryController {
     DiaryService diaryService;
 
     @GetMapping("/getCalendar")
-    public List<DiaryDTO> getCalendar(@RequestParam UserEntity id, @RequestParam String month){
+    public List<DiaryDTO> getCalendar(@RequestParam int id, @RequestParam String month){
         String createdAt = "-" + month + "-";
         List<DiaryDTO> result = diaryService.getCalendar(id, createdAt);
         return result;
@@ -43,8 +43,8 @@ public class DiaryController {
     }
 
     @GetMapping("/getEveryDiary")
-    public List<DiaryUserDTO> getEveryDiary(@RequestParam boolean isPublic){
-        List<DiaryUserDTO> result = diaryService.getEveryDiary(isPublic);
+    public List<DiaryUserDTO> getEveryDiary(){
+        List<DiaryUserDTO> result = diaryService.getEveryDiary();
         return result;
     }
 

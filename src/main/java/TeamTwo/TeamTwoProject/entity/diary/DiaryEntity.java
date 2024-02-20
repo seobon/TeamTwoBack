@@ -25,8 +25,7 @@ public class DiaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "id", nullable = false)
-//    @Column(name = "id", nullable = false)
-    private UserEntity id;
+    private UserEntity user;
 
     @Column(name = "diaryTitle", nullable = false)
     private String diaryTitle;
@@ -53,7 +52,4 @@ public class DiaryEntity {
 
     @Column(name = "isPublic", nullable = false)
     private boolean isPublic;
-
-//    @Column(name = "nickname")
-//    private String nickname;
 }

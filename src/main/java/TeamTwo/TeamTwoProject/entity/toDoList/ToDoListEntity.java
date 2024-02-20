@@ -22,7 +22,7 @@ public class ToDoListEntity {
     @ManyToOne
     @JoinColumn(name = "id", nullable = false)
 //    @Column(name = "id", nullable = false)
-    private UserEntity id;
+    private UserEntity user;
 
     @Column(name = "todoContent", nullable = false)
     private String todoContent;
