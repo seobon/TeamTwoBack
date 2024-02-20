@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class EmailPostDTO {
     private String email;
+    private String userid;
 }
