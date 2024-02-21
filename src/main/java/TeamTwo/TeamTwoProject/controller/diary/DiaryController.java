@@ -10,75 +10,122 @@ import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.service.diary.DiaryService;
 import TeamTwo.TeamTwoProject.service.reaction.ReactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/diary")
 public class DiaryController {
     @Autowired
     DiaryService diaryService;
-
     @Autowired
     ReactionService reactionService;
 
+    // 다이어리를 작성한 날짜 조회 (캘린더 정보)
     @GetMapping("/getCalendar")
-    public List<DiaryDTO> getCalendar(@RequestParam int id, @RequestParam String month){
+    public ResponseEntity<List<DiaryDTO>> getCalendar(@RequestParam int id, @RequestParam String month){
         String createdAt = month + "/";
         List<DiaryDTO> result = diaryService.getCalendar(id, createdAt);
-        return result;
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 
+    // 내 다이어리 조회
     @GetMapping("/getMyDiary")
-    public DiaryUserReactionDTO getMyDiary(@RequestParam int diaryId){
+    public ResponseEntity<DiaryUserReactionDTO> getMyDiary(@RequestParam int diaryId){
         DiaryUserReactionDTO result = diaryService.getMyDiary(diaryId);
-//        if (result == null) {
-//            throw new RuntimeException("실패");
-//        예외처리 필요
-//        }
-        return result;
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 
+    // 다이어리 작성
     @PostMapping("/postDiary")
-    public Boolean postDiary(@RequestBody DiaryDTO diaryDTO){
-        DiaryEntity result = diaryService.postDiary(diaryDTO);
-        return true;
+    public UserEntity postDiary(@RequestBody DiaryDTO diaryDTO){
+//    public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
+//        try {
+//            diaryService.postDiary(diaryDTO);
+//            return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+        UserEntity r = diaryService.postDiary(diaryDTO);
+        return r;
     }
 
+    // 공개 다이어리 모두 조회
     @GetMapping("/getEveryDiary")
-    public List<DiaryUserDTO> getEveryDiary(){
+    public ResponseEntity<List<DiaryUserDTO>> getEveryDiary(){
         List<DiaryUserDTO> result = diaryService.getEveryDiary();
-        return result;
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 
+    // 타인의 다이어리 상세 조회
     @GetMapping("/getOneDiary")
-    public DiaryUserReactionDTO getOneDiary(@RequestParam int diaryId){
+    public ResponseEntity<DiaryUserReactionDTO> getOneDiary(@RequestParam int diaryId){
         DiaryUserReactionDTO result = diaryService.getOneDiary(diaryId);
-        return result;
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 
+    // 검색
     @GetMapping("/search")
-    public List<DiaryUserDTO> search(String searchWord){
+    public ResponseEntity<List<DiaryUserDTO>> search(String searchWord){
         List<DiaryUserDTO> result = diaryService.search(searchWord);
-        return result;
+        if (result == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(result);
+        }
     }
 
+    // 다이어리 수정
     @PatchMapping("/patchDiary")
-    public Boolean patchDiary(@RequestBody DiaryDTO diaryDTO){
-        DiaryEntity result = diaryService.patchDiary(diaryDTO);
-        return true;
+    public ResponseEntity patchDiary(@RequestBody DiaryDTO diaryDTO){
+        try {
+            diaryService.patchDiary(diaryDTO);
+            return ResponseEntity.ok().body("Patch Diary Success : 다이어리 수정을 성공했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
+    // 다이어리 삭제
     @DeleteMapping("/deleteDiary")
-    public Boolean deleteDiary(@RequestBody DiaryDTO diaryDTO){
-        Boolean result = diaryService.deleteDiary(diaryDTO);
-        return result;
+    public ResponseEntity deleteDiary(@RequestBody DiaryDTO diaryDTO){
+        try {
+            diaryService.deleteDiary(diaryDTO);
+            return ResponseEntity.ok("Delete Diary Success : 다이어리가 삭제되었습니다.");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 
+    // 타인의 다이어리에 반응하기
     @PatchMapping("/reaction")
-    public Boolean reaction(@RequestBody ReactionDTO reactionDTO){
-        ReactionEntity result = reactionService.reaction(reactionDTO);
-        return true;
+    public ResponseEntity reaction(@RequestBody ReactionDTO reactionDTO){
+        try {
+            reactionService.reaction(reactionDTO);
+            return ResponseEntity.ok().body("Reaction Success : 반응 등록을 성공했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
