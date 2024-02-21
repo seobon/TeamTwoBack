@@ -22,24 +22,23 @@ import java.util.Optional;
 public class DiaryService {
     @Autowired
     private DiaryRepository diaryRepository;
-
     @Autowired
     private ReactionRepository reactionRepository;
-
     @Autowired
     private UserRepository userRepository;
 
+    // 다이어리를 작성한 날짜 조회 (캘린더 정보)
     public List<DiaryDTO> getCalendar(int id, String createdAt) {
         List<DiaryEntity> getCalendarData = diaryRepository.findByCreatedAtContainingAndUser_id(createdAt, id);
         List<DiaryDTO> getCalendarResult = new ArrayList<>();
 
-        if(getCalendarData.size()!=0) {
+        if (!getCalendarData.isEmpty()) {
             for (DiaryEntity CalendarData : getCalendarData) {
                 DiaryDTO diaryDTO = DiaryDTO.builder()
                         .diaryId(CalendarData.getDiaryId())
                         .mood(CalendarData.getMood())
                         .createdAt(CalendarData.getCreatedAt())
-                        .msg("Get Calendar Success")
+                        .msg("Get Calendar Success : 캘린더 정보 조회를 성공했습니다.")
                         .build();
                 getCalendarResult.add(diaryDTO);
             }
@@ -52,6 +51,7 @@ public class DiaryService {
         return getCalendarResult;
     }
 
+    // 내 다이어리 조회
     public DiaryUserReactionDTO getMyDiary(int diaryId) {
         boolean likey = true;
         List<ReactionEntity> getMyDiaryLikeyData = reactionRepository.findByLikeyAndDiary_diaryId(likey, diaryId);
@@ -67,62 +67,98 @@ public class DiaryService {
         List<ReactionEntity> getMyDiaryAngryData = reactionRepository.findByAngryAndDiary_diaryId(angry, diaryId);
 
         DiaryEntity getMyDiaryData = diaryRepository.findByDiaryId(diaryId);
-        DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
-                .nickname(getMyDiaryData.getUser().getNickname())
-                .image(getMyDiaryData.getUser().getImage())
-                .diaryId(getMyDiaryData.getDiaryId())
-                .diaryTitle(getMyDiaryData.getDiaryTitle())
-                .diaryContent(getMyDiaryData.getDiaryContent())
-                .mood(getMyDiaryData.getMood())
-                .createdAt(getMyDiaryData.getCreatedAt())
-                .updatedAt(getMyDiaryData.getUpdatedAt())
-                .location(getMyDiaryData.getLocation())
-                .weather(getMyDiaryData.getWeather())
-                .isPublic(getMyDiaryData.isPublic())
-                .likey(getMyDiaryLikeyData.size())
-                .love(getMyDiaryLoveData.size())
-                .haha(getMyDiaryHahaData.size())
-                .wow(getMyDiaryWowData.size())
-                .sad(getMyDiarySadData.size())
-                .angry(getMyDiaryAngryData.size())
-                .msg("Get My Diary Success")
-                .build();
-        return diaryUserReactionDTO;
+
+        if (getMyDiaryData != null) {
+            DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
+                    .nickname(getMyDiaryData.getUser().getNickname())
+                    .image(getMyDiaryData.getUser().getImage())
+                    .diaryId(getMyDiaryData.getDiaryId())
+                    .diaryTitle(getMyDiaryData.getDiaryTitle())
+                    .diaryContent(getMyDiaryData.getDiaryContent())
+                    .mood(getMyDiaryData.getMood())
+                    .createdAt(getMyDiaryData.getCreatedAt())
+                    .updatedAt(getMyDiaryData.getUpdatedAt())
+                    .location(getMyDiaryData.getLocation())
+                    .weather(getMyDiaryData.getWeather())
+                    .isPublic(getMyDiaryData.isPublic())
+                    .likey(getMyDiaryLikeyData.size())
+                    .love(getMyDiaryLoveData.size())
+                    .haha(getMyDiaryHahaData.size())
+                    .wow(getMyDiaryWowData.size())
+                    .sad(getMyDiarySadData.size())
+                    .angry(getMyDiaryAngryData.size())
+                    .msg("Get My Diary Success : 다이어리 조회를 성공했습니다.")
+                    .build();
+            return diaryUserReactionDTO;
+        } else {
+            DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
+                    .msg("Get My Diary Error : 다이어리 조회를 실패했습니다.")
+                    .build();
+            return diaryUserReactionDTO;
+        }
     }
 
-    public DiaryEntity postDiary(DiaryDTO diaryDTO) {
-        UserEntity userEntity = userRepository.findById(diaryDTO.getId());
+    // 다이어리 작성
+    public UserEntity postDiary(DiaryDTO diaryDTO) {
+//    public DiaryEntity postDiary(DiaryDTO diaryDTO) {
+        if (diaryDTO.getDiaryTitle() == null) {
+            throw new RuntimeException("Post Diary Error : 다이어리의 제목을 작성해주세요.");
+        }
+
+        if (diaryDTO.getDiaryContent() == null) {
+            throw new RuntimeException("Post Diary Error : 다이어리의 내용을 작성해주세요.");
+        }
+
+        if (diaryDTO.getMood() == null) {
+            throw new RuntimeException("Post Diary Error : 오늘의 기분을 입력해주세요.");
+        }
+
+        if (diaryDTO.getLocation() == null) {
+            throw new RuntimeException("Post Diary Error : 현재 위치정보를 가져오지 못했습니다.");
+        }
+
+        UserEntity userData = userRepository.findById(diaryDTO.getId());
         DiaryEntity postDiaryData = DiaryEntity.builder()
+                .user(userData)
                 .diaryTitle(diaryDTO.getDiaryTitle())
                 .diaryContent(diaryDTO.getDiaryContent())
                 .mood(diaryDTO.getMood())
                 .location(diaryDTO.getLocation())
                 .isPublic(diaryDTO.isPublic())
-                .user(userEntity)
                 .build();
-        return diaryRepository.save(postDiaryData);
+//        return diaryRepository.save(postDiaryData);
+        return userData;
     }
 
+    // 공개 다이어리 모두 조회
     public List<DiaryUserDTO> getEveryDiary() {
         boolean isPublic = true;
         List<DiaryEntity> getEveryDiaryData = diaryRepository.findByIsPublic(isPublic);
         List<DiaryUserDTO> getEveryDiaryResult = new ArrayList<>();
 
-        for (DiaryEntity DiaryData : getEveryDiaryData) {
+        if (!getEveryDiaryData.isEmpty()) {
+            for (DiaryEntity DiaryData : getEveryDiaryData) {
+                DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                        .nickname(DiaryData.getUser().getNickname())
+                        .image(DiaryData.getUser().getImage())
+                        .diaryId(DiaryData.getDiaryId())
+                        .diaryTitle(DiaryData.getDiaryTitle())
+                        .diaryContent(DiaryData.getDiaryContent())
+                        .isPublic(DiaryData.isPublic())
+                        .msg("Get Every Diary Success : 다이어리 조회를 성공했습니다.")
+                        .build();
+                getEveryDiaryResult.add(diaryUserDTO);
+            }
+        } else {
             DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                    .nickname(DiaryData.getUser().getNickname())
-                    .image(DiaryData.getUser().getImage())
-                    .diaryId(DiaryData.getDiaryId())
-                    .diaryTitle(DiaryData.getDiaryTitle())
-                    .diaryContent(DiaryData.getDiaryContent())
-                    .isPublic(DiaryData.isPublic())
-                    .msg("Get Every Diary Success")
+                    .msg("Get Every Diary Error : 다이어리 조회를 실패했습니다.")
                     .build();
             getEveryDiaryResult.add(diaryUserDTO);
         }
         return getEveryDiaryResult;
     }
 
+    // 타인의 다이어리 상세 조회
     public DiaryUserReactionDTO getOneDiary(int diaryId) {
         boolean likey = true;
         List<ReactionEntity> getOneDiaryLikeyData = reactionRepository.findByLikeyAndDiary_diaryId(likey, diaryId);
@@ -138,25 +174,31 @@ public class DiaryService {
         List<ReactionEntity> getOneDiaryAngryData = reactionRepository.findByAngryAndDiary_diaryId(angry, diaryId);
 
         DiaryEntity getOneDiaryData = diaryRepository.findByDiaryId(diaryId);
-
-        DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
-                .nickname(getOneDiaryData.getUser().getNickname())
-                .image(getOneDiaryData.getUser().getImage())
-                .diaryId(getOneDiaryData.getDiaryId())
-                .diaryTitle(getOneDiaryData.getDiaryTitle())
-                .diaryContent(getOneDiaryData.getDiaryContent())
-                .likey(getOneDiaryLikeyData.size())
-                .love(getOneDiaryLoveData.size())
-                .haha(getOneDiaryHahaData.size())
-                .wow(getOneDiaryWowData.size())
-                .sad(getOneDiarySadData.size())
-                .angry(getOneDiaryAngryData.size())
-                .msg("Get One Diary Success")
-                .build();
-
-        return diaryUserReactionDTO;
+        if (getOneDiaryData != null) {
+            DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
+                    .nickname(getOneDiaryData.getUser().getNickname())
+                    .image(getOneDiaryData.getUser().getImage())
+                    .diaryId(getOneDiaryData.getDiaryId())
+                    .diaryTitle(getOneDiaryData.getDiaryTitle())
+                    .diaryContent(getOneDiaryData.getDiaryContent())
+                    .likey(getOneDiaryLikeyData.size())
+                    .love(getOneDiaryLoveData.size())
+                    .haha(getOneDiaryHahaData.size())
+                    .wow(getOneDiaryWowData.size())
+                    .sad(getOneDiarySadData.size())
+                    .angry(getOneDiaryAngryData.size())
+                    .msg("Get One Diary Success : 다이어리 조회를 성공했습니다.")
+                    .build();
+            return diaryUserReactionDTO;
+        } else {
+            DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
+                    .msg("Get One Diary Error : 다이어리 조회를 실패했습니다.")
+                    .build();
+            return diaryUserReactionDTO;
+        }
     }
 
+    // 검색
     public List<DiaryUserDTO> search(String searchWord) {
         String diaryTitle = searchWord;
         String diaryContent = searchWord;
@@ -164,22 +206,34 @@ public class DiaryService {
         List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
         List<DiaryUserDTO> searchResult = new ArrayList<>();
 
-        for (DiaryEntity DiaryData : searchData) {
+        if (!searchData.isEmpty()) {
+            for (DiaryEntity DiaryData : searchData) {
+                DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                        .nickname(DiaryData.getUser().getNickname())
+                        .image(DiaryData.getUser().getImage())
+                        .diaryId(DiaryData.getDiaryId())
+                        .diaryTitle(DiaryData.getDiaryTitle())
+                        .diaryContent(DiaryData.getDiaryContent())
+                        .msg("Search Success : 검색을 성공했습니다.")
+                        .build();
+                searchResult.add(diaryUserDTO);
+            }
+        } else {
             DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                    .nickname(DiaryData.getUser().getNickname())
-                    .image(DiaryData.getUser().getImage())
-                    .diaryId(DiaryData.getDiaryId())
-                    .diaryTitle(DiaryData.getDiaryTitle())
-                    .diaryContent(DiaryData.getDiaryContent())
-                    .msg("Search Success")
+                    .msg("Get Every Diary Error : 검색 결과가 없습니다.")
                     .build();
             searchResult.add(diaryUserDTO);
         }
         return searchResult;
     }
 
+    // 다이어리 수정
     public DiaryEntity patchDiary(DiaryDTO diaryDTO) {
         DiaryEntity OriginDiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
+
+        if (OriginDiaryData == null) {
+            throw new RuntimeException("Patch Diary Error : 수정할 다이어리가 없습니다.");
+        }
 
         DiaryEntity patchDiaryData = DiaryEntity.builder()
                 .user(OriginDiaryData.getUser())
@@ -192,13 +246,18 @@ public class DiaryService {
                 .weather(Optional.ofNullable(diaryDTO.getWeather()).orElse(OriginDiaryData.getWeather()))
                 .isPublic(Optional.of(diaryDTO.isPublic()).orElse(OriginDiaryData.isPublic()))
                 .build();
+
         return diaryRepository.save(patchDiaryData);
     }
 
-    public boolean deleteDiary(DiaryDTO diaryDTO) {
-        DiaryEntity DiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
-        diaryRepository.delete(DiaryData);
-
-        return true;
+    // 다이어리 삭제
+    public void deleteDiary(DiaryDTO diaryDTO) {
+        try {
+            DiaryEntity DiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
+            diaryRepository.delete(DiaryData);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException("Delete Diary Error : 삭제할 다이어리가 없습니다.");
+        }
     }
 }
