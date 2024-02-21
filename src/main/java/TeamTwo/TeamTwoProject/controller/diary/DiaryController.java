@@ -70,6 +70,12 @@ public class DiaryController {
         return true;
     }
 
+    @DeleteMapping("/deleteDiary")
+    public Boolean deleteDiary(@RequestBody DiaryDTO diaryDTO){
+        Boolean result = diaryService.deleteDiary(diaryDTO);
+        return result;
+    }
+
     @PatchMapping("/reaction")
     public Boolean reaction(@RequestBody ReactionDTO reactionDTO){
         ReactionEntity result = reactionService.reaction(reactionDTO);
