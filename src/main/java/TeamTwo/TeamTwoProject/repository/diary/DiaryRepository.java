@@ -17,8 +17,6 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
     // getMyDiary & getOneDiary
     DiaryEntity findByDiaryId(Integer diaryId);
 
-    // postDiary
-
     // getEveryDiary
     List<DiaryEntity> findByIsPublic(boolean isPublic);
 

@@ -195,6 +195,10 @@ public class DiaryService {
         return diaryRepository.save(patchDiaryData);
     }
 
-//    public boolean deleteDiary() {
-//    }
+    public boolean deleteDiary(DiaryDTO diaryDTO) {
+        DiaryEntity DiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
+        diaryRepository.delete(DiaryData);
+
+        return true;
+    }
 }

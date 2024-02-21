@@ -17,5 +17,5 @@ public interface ReactionRepository extends JpaRepository<ReactionEntity, Intege
     List<ReactionEntity> findByAngryAndDiary_diaryId(boolean angry, Integer diaryId);
 
     // reaction
-    ReactionEntity findByDiary_diaryId(Integer diaryId);
+    ReactionEntity findByDiary_diaryIdAndUser_id(Integer diaryId, Integer id);
 }
