@@ -27,10 +27,11 @@ public class ReactionService {
 
     // 타인의 다이어리에 반응하기
     public ReactionEntity reaction(ReactionDTO reactionDTO) {
-        UserEntity UserData = userRepository.findById(reactionDTO.getId());
+        UserEntity userData = userRepository.findById(reactionDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         DiaryEntity DiaryData = diaryRepository.findByDiaryId(reactionDTO.getDiaryId());
 
-        if (UserData == null) {
+        if (userData == null) {
             throw new RuntimeException("Patch Diary Error : 로그인이 필요한 서비스입니다.");
         }
 
@@ -42,7 +43,7 @@ public class ReactionService {
 
         if (OriginReactionData == null) {
             ReactionEntity reactionData = ReactionEntity.builder()
-                    .user(UserData)
+                    .user(userData)
                     .diary(DiaryData)
                     .reactionId(reactionDTO.getReactionId())
                     .likey(reactionDTO.isLikey())
