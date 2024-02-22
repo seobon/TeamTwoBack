@@ -72,7 +72,8 @@ public class UserService {
 
     // 이미지 저장
     public void saveImage(int id, MultipartFile image) throws Exception {
-        Optional<UserEntity> optionalUser = Optional.ofNullable(userRepository.findById(id));
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 
         // 이미지 파일을 저장할 디렉토리 ( 각자의 경로로 수정해야함)
         Path uploadDir = Paths.get("/Users/kyoungdolee/Desktop/TeamTwoBack/src/main/resources/static/images");
@@ -82,17 +83,12 @@ public class UserService {
             Files.createDirectories(uploadDir);
         }
 
-        if (!optionalUser.isPresent()) {
-            throw new Exception("사용자를 찾을 수 없습니다.");
-        }
-
-        UserEntity user = optionalUser.get();
-
         String imageName = saveImageFile(image);  // 이미지 파일을 저장하고 이미지 이름을 반환하는 메소드
 
         user = user.toBuilder().image(imageName).build();
         userRepository.save(user);
     }
+
     // 이미지 파일체크
     public String saveImageFile(MultipartFile image) throws Exception {
         // 파일이 비어있는지 확인

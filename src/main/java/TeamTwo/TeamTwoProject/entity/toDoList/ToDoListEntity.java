@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Builder
 @NoArgsConstructor
@@ -19,20 +21,43 @@ public class ToDoListEntity {
     @Column(name = "todoId", nullable = false)
     private int todoId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id", nullable = false)
-//    @Column(name = "id", nullable = false)
     private UserEntity user;
 
     @Column(name = "todoContent", nullable = false)
     private String todoContent;
 
     @Column(name = "createdAt", nullable = false)
-    private String createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "deadline")
     private String deadline;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
-    private String state;
+    private State state;
+    public enum State {
+        NOTSTART("notstart"),
+        DONE("done");
+
+        private String value;
+
+        State(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static State fromString(String value) {
+            for (State state : State.values()) {
+                if (state.getValue().equalsIgnoreCase(value)) {
+                    return state;
+                }
+            }
+            throw new IllegalArgumentException("Invalid state value");
+        }
+    }
 }
