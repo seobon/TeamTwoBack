@@ -117,7 +117,8 @@ public class DiaryService {
             throw new RuntimeException("Post Diary Error : 현재 위치정보를 가져오지 못했습니다.");
         }
 
-        UserEntity userData = userRepository.findById(diaryDTO.getId());
+        UserEntity userData = userRepository.findById(diaryDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         DiaryEntity postDiaryData = DiaryEntity.builder()
                 .user(userData)
                 .diaryTitle(diaryDTO.getDiaryTitle())
