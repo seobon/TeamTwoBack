@@ -151,14 +151,10 @@ public class UserController {
     ) {
         try {
             userService.deleteUser(userid, userUpdateDTO.getCurrentPassword());
-            return ResponseEntity.ok("회원이 삭제되었스므니다.");
+            return ResponseEntity.ok("회원이 삭제되었습니다.");
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-
         }
-
     }
-
-
 }

@@ -22,13 +22,11 @@ public class ReactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "diaryId", nullable = false)
-//    @Column(name = "diaryId", nullable = false)
-    private DiaryEntity diaryId;
+    private DiaryEntity diary;
 
     @ManyToOne
     @JoinColumn(name = "id", nullable = false)
-//    @Column(name = "id", nullable = false)
-    private UserEntity id;
+    private UserEntity user;
 
     @Column(name = "likey", nullable = false)
     private boolean likey;
