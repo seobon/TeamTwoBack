@@ -50,16 +50,13 @@ public class DiaryController {
 
     // 다이어리 작성
     @PostMapping("/postDiary")
-    public UserEntity postDiary(@RequestBody DiaryDTO diaryDTO){
-//    public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
-//        try {
-//            diaryService.postDiary(diaryDTO);
-//            return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-        UserEntity r = diaryService.postDiary(diaryDTO);
-        return r;
+    public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
+        try {
+            diaryService.postDiary(diaryDTO);
+            return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     // 공개 다이어리 모두 조회

@@ -99,8 +99,7 @@ public class DiaryService {
     }
 
     // 다이어리 작성
-    public UserEntity postDiary(DiaryDTO diaryDTO) {
-//    public DiaryEntity postDiary(DiaryDTO diaryDTO) {
+    public DiaryEntity postDiary(DiaryDTO diaryDTO) {
         if (diaryDTO.getDiaryTitle() == null) {
             throw new RuntimeException("Post Diary Error : 다이어리의 제목을 작성해주세요.");
         }
@@ -127,8 +126,7 @@ public class DiaryService {
                 .location(diaryDTO.getLocation())
                 .isPublic(diaryDTO.isPublic())
                 .build();
-//        return diaryRepository.save(postDiaryData);
-        return userData;
+        return diaryRepository.save(postDiaryData);
     }
 
     // 공개 다이어리 모두 조회
@@ -254,6 +252,8 @@ public class DiaryService {
     // 다이어리 삭제
     public void deleteDiary(DiaryDTO diaryDTO) {
         try {
+            ReactionEntity ReactionData = reactionRepository.findByDiary_diaryId(diaryDTO.getDiaryId());
+            reactionRepository.delete(ReactionData);
             DiaryEntity DiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
             diaryRepository.delete(DiaryData);
         } catch (Exception e) {
