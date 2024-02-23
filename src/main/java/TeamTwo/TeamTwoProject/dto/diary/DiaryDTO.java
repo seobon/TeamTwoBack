@@ -1,8 +1,11 @@
 package TeamTwo.TeamTwoProject.dto.diary;
 
+import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -15,8 +18,8 @@ public class DiaryDTO {
     private String mood;
     private String createdAt;
     private String updatedAt;
-    private String location;
-    private int weather;
+    private double[] currentLocation;
+    private String weather;
     private boolean isPublic;
 
     private String msg;
