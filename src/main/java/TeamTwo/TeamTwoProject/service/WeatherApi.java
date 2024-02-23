@@ -1,9 +1,9 @@
 package TeamTwo.TeamTwoProject.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class WeatherApi {
         return new double[]{latitude, longitude};
     }
 
-    private static WeatherData getCurrentWeather(double latitude, double longitude) throws IOException {
+    public static WeatherData getCurrentWeather(double latitude, double longitude) throws IOException {
         String apiUrl = String.format(OPENWEATHERMAP_API_URL, latitude, longitude, OPENWEATHERMAP_API_KEY);
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -87,20 +87,3 @@ public class WeatherApi {
     }
 }
 
-class WeatherData {
-    private String name;
-    private double temperature;
-    private String weatherDescription;
-
-    public String getName() {
-        return name;
-    }
-
-    public double getTemperature() {
-        return temperature - 273.15; // Kelvin to Celsius 변환
-    }
-
-    public String getWeatherDescription() {
-        return weatherDescription;
-    }
-}
