@@ -7,6 +7,8 @@ import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.security.TokenProvider;
 import TeamTwo.TeamTwoProject.service.user.TokenBlacklistService;
 import TeamTwo.TeamTwoProject.service.user.UserService;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -79,6 +81,39 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // 로그인 상태 확인
+    @GetMapping("/check")
+    public ResponseEntity<?> checkLoginStatus(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+
+        if (header != null && header.startsWith("Bearer ")) {
+            String token = header.substring(7);
+            String userid = null;
+            try {
+                userid = tokenProvider.validateAndGetUserId(token);
+            } catch (JwtException e) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Access Token");
+            }
+
+            if (userid != null) {
+                UserEntity user = userService.findByUserid(userid);
+                if (user != null) {
+                    // accessToken이 유효하다면 사용자 정보 반환
+                    UserDTO responseUserDTO = UserDTO.builder()
+                            .id(user.getId())
+                            .userid(user.getUserid())
+                            .email(user.getEmail())
+                            .nickname(user.getNickname())
+                            .build();
+                    return ResponseEntity.ok().body(responseUserDTO);
+                }
+            }
+        }
+
+        // accessToken이 유효하지 않다면 에러 메시지 반환
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Access Token");
     }
 
     // 로그아웃

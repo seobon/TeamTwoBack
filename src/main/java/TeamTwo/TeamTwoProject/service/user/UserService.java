@@ -126,9 +126,9 @@ public class UserService {
     }
 
     // 회원 정보 받아오기
-    public UserEntity getUser(String userId) {
+    public UserEntity getUser(String userid) {
         try {
-            return userRepository.findByUserid(userId);
+            return userRepository.findByUserid(userid);
         } catch (Exception e) {
             return null;
         }
@@ -179,5 +179,10 @@ public class UserService {
             log.error(e.getMessage());
             throw new RuntimeException("사용자 삭제 중 오류가 발생했습니다.");
         }
+    }
+
+    // 회원불러오기위한 코드 추가(Controller에서 사용)
+    public UserEntity findByUserid(String userid) {
+        return userRepository.findByUserid(userid);
     }
 }
