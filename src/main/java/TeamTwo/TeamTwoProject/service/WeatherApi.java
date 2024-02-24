@@ -28,7 +28,7 @@ public class WeatherApi {
             double longitude = location[1];
 
             // 현재 위치의 날씨 정보를 가져옴
-            WeatherData weatherData = getCurrentWeather(latitude, longitude);
+            WeatherCustomData weatherData = getCurrentWeather(latitude, longitude);
             displayWeatherInfo(weatherData);
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class WeatherApi {
         return new double[]{latitude, longitude};
     }
 
-    public static WeatherData getCurrentWeather(double latitude, double longitude) throws IOException {
+    public static WeatherCustomData getCurrentWeather(double latitude, double longitude) throws IOException {
         String apiUrl = String.format(OPENWEATHERMAP_API_URL, latitude, longitude, OPENWEATHERMAP_API_KEY);
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -77,10 +77,10 @@ public class WeatherApi {
         reader.close();
 
         Gson gson = new Gson();
-        return gson.fromJson(response.toString(), WeatherData.class);
+        return gson.fromJson(response.toString(), WeatherCustomData.class);
     }
 
-    private static void displayWeatherInfo(WeatherData weatherData) {
+    private static void displayWeatherInfo(WeatherCustomData weatherData) {
         System.out.println("City: " + weatherData.getName());
         System.out.println("Temperature: " + weatherData.getTemperature() + "°C");
         System.out.println("Weather: " + weatherData.getWeatherDescription());

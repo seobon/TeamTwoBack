@@ -1,6 +1,6 @@
 package TeamTwo.TeamTwoProject.service;
 
-public class WeatherData {
+public class WeatherCustomData {
     public String name;
     public double temperature;
     public String weatherDescription;
