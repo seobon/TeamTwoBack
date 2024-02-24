@@ -61,6 +61,7 @@ public class DiaryController {
             WeatherData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
             diaryDTO.setWeather(weatherData.getWeatherDescription());
             diaryDTO.setWeather(String.valueOf(weatherData.getTemperature()));
+          
             diaryService.postDiary(diaryDTO);
             return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
         } catch (Exception e) {
