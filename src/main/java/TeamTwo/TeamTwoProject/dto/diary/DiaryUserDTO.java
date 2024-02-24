@@ -22,5 +22,6 @@ public class DiaryUserDTO {
     private int weather;
     private boolean isPublic;
 
+    private int pageCount;
     private String msg;
 }

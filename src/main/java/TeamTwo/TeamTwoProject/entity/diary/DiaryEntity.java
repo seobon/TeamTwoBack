@@ -1,6 +1,7 @@
 package TeamTwo.TeamTwoProject.entity.diary;
 
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Builder
@@ -25,6 +30,7 @@ public class DiaryEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id", nullable = false)
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private UserEntity user;
 
     @Column(name = "diaryTitle", nullable = false)
@@ -37,6 +43,7 @@ public class DiaryEntity {
     private String mood;
 
     @CreatedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "createdAt", nullable = false)
     private String createdAt;
 
@@ -52,4 +59,15 @@ public class DiaryEntity {
 
     @Column(name = "isPublic", nullable = false)
     private boolean isPublic;
+
+
+    @PrePersist
+    public void onPrePersist() {
+        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        this.updatedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 }
