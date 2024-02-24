@@ -9,14 +9,13 @@ import TeamTwo.TeamTwoProject.service.reaction.ReactionService;
 import lombok.extern.slf4j.Slf4j;
 import TeamTwo.TeamTwoProject.service.CurrentLocationApi;
 import TeamTwo.TeamTwoProject.service.WeatherApi;
-import TeamTwo.TeamTwoProject.service.WeatherData;
+import TeamTwo.TeamTwoProject.service.WeatherCustomData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/diary")
@@ -57,7 +56,7 @@ public class DiaryController {
             double[] location = CurrentLocationApi.getCurrentLocation();
             double latitude = location[0];
             double longitude = location[1];
-            WeatherData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
+            WeatherCustomData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
             diaryDTO.setWeather(weatherData.getWeatherDescription());
             diaryDTO.setWeather(String.valueOf(weatherData.getTemperature()));
           
