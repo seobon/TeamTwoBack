@@ -78,7 +78,7 @@ public class DiaryService {
                     .mood(getMyDiaryData.getMood())
                     .createdAt(getMyDiaryData.getCreatedAt())
                     .updatedAt(getMyDiaryData.getUpdatedAt())
-                    .location(getMyDiaryData.getLocation())
+                    .currentLocation(getMyDiaryData.getCurrentLocation())
                     .weather(getMyDiaryData.getWeather())
                     .isPublic(getMyDiaryData.isPublic())
                     .likey(getMyDiaryLikeyData.size())
@@ -112,7 +112,7 @@ public class DiaryService {
             throw new RuntimeException("Post Diary Error : 오늘의 기분을 입력해주세요.");
         }
 
-        if (diaryDTO.getLocation() == null) {
+        if (diaryDTO.getCurrentLocation() == null) {
             throw new RuntimeException("Post Diary Error : 현재 위치정보를 가져오지 못했습니다.");
         }
 
@@ -123,7 +123,7 @@ public class DiaryService {
                 .diaryTitle(diaryDTO.getDiaryTitle())
                 .diaryContent(diaryDTO.getDiaryContent())
                 .mood(diaryDTO.getMood())
-                .location(diaryDTO.getLocation())
+                .currentLocation(diaryDTO.getCurrentLocation())
                 .isPublic(diaryDTO.isPublic())
                 .build();
         return diaryRepository.save(postDiaryData);
@@ -241,7 +241,7 @@ public class DiaryService {
                 .diaryContent(Optional.ofNullable(diaryDTO.getDiaryContent()).orElse(OriginDiaryData.getDiaryContent()))
                 .mood(Optional.ofNullable(diaryDTO.getMood()).orElse(OriginDiaryData.getMood()))
                 .createdAt(OriginDiaryData.getCreatedAt())
-                .location(Optional.ofNullable(diaryDTO.getLocation()).orElse(OriginDiaryData.getLocation()))
+                .currentLocation(Optional.ofNullable(diaryDTO.getCurrentLocation()).orElse(OriginDiaryData.getCurrentLocation()))
                 .weather(Optional.ofNullable(diaryDTO.getWeather()).orElse(OriginDiaryData.getWeather()))
                 .isPublic(Optional.of(diaryDTO.isPublic()).orElse(OriginDiaryData.isPublic()))
                 .build();
