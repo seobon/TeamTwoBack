@@ -15,4 +15,12 @@ public class ToDoListDTO {
     private LocalDate createdAt;
     private String deadline;
     private String state;
+
+    public void setState(String state) {
+        if (!"notstart".equalsIgnoreCase(state) && !"done".equalsIgnoreCase(state)) {
+            throw new IllegalArgumentException("Invalid state value");
+        }
+        this.state = state;
+    }
+
 }

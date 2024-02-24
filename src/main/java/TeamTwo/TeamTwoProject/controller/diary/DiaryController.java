@@ -7,6 +7,9 @@ import TeamTwo.TeamTwoProject.dto.reaction.ReactionDTO;
 import TeamTwo.TeamTwoProject.service.diary.DiaryService;
 import TeamTwo.TeamTwoProject.service.reaction.ReactionService;
 import lombok.extern.slf4j.Slf4j;
+import TeamTwo.TeamTwoProject.service.CurrentLocationApi;
+import TeamTwo.TeamTwoProject.service.WeatherApi;
+import TeamTwo.TeamTwoProject.service.WeatherData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +54,13 @@ public class DiaryController {
     @PostMapping("/postDiary")
     public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
         try {
+            double[] location = CurrentLocationApi.getCurrentLocation();
+            double latitude = location[0];
+            double longitude = location[1];
+            WeatherData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
+            diaryDTO.setWeather(weatherData.getWeatherDescription());
+            diaryDTO.setWeather(String.valueOf(weatherData.getTemperature()));
+          
             diaryService.postDiary(diaryDTO);
             return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
         } catch (Exception e) {

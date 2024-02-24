@@ -18,8 +18,8 @@ public class DiaryUserDTO {
     private String mood;
     private String createdAt;
     private String updatedAt;
-    private String location;
-    private int weather;
+    private double[] currentLocation;
+    private String weather;
     private boolean isPublic;
 
     private int pageCount;
