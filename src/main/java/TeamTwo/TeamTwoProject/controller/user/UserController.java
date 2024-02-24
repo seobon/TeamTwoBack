@@ -177,6 +177,24 @@ public class UserController {
             return ResponseEntity.internalServerError().build();
         }
     }
+    // 회원 수정 닉네임만 변경시
+    @PatchMapping("/profile/{userid}/nickname")
+    public ResponseEntity<UserEntity> updateNickname(
+            @PathVariable("userid") String userid,
+            @RequestBody UserUpdateDTO userUpdateDTO
+    ) {
+        try {
+            UserEntity updateUser = userService.updateUserNickname(userid, userUpdateDTO.getNewNickName() );
+            if (updateUser == null) {
+                return ResponseEntity.badRequest().build();
+            } else {
+                System.out.println(updateUser);
+                return ResponseEntity.ok(updateUser);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
     // 회원 삭제
     @DeleteMapping("/profile/{userid}/delete")
