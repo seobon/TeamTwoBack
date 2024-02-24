@@ -1,6 +1,7 @@
 package TeamTwo.TeamTwoProject.service.toDoList;
 
 import TeamTwo.TeamTwoProject.dto.toDoList.ToDoListDTO;
+import TeamTwo.TeamTwoProject.dto.toDoList.TodoListUpdateDTO;
 import TeamTwo.TeamTwoProject.entity.toDoList.ToDoListEntity;
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.repository.toDoList.ToDoListRepository;
@@ -20,7 +21,6 @@ import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @RequiredArgsConstructor
-
 public class ToDoListService {
 
     @Autowired
@@ -41,6 +41,7 @@ public class ToDoListService {
     }
 
     private ToDoListEntity convertToEntity(ToDoListDTO dto, UserEntity user) {
+        System.out.println("dto.getState(): " + dto.getState());
         return ToDoListEntity.builder()
                 .user(user)
                 .todoContent(dto.getTodoContent())
@@ -48,6 +49,39 @@ public class ToDoListService {
                 .deadline(dto.getDeadline())
                 .state(ToDoListEntity.State.fromString(dto.getState()))
                 .build();
+    }
+    // 특정 ToDo 항목 조회
+    public List<ToDoListDTO> findAllByUserId(int id) {
+        return toDoListRepository.findAllByUserId(id).stream()
+                .map(entity -> convertToDto(entity))
+                .collect(Collectors.toList());
+    }
+
+    private ToDoListDTO convertToDto(ToDoListEntity entity) {
+        return ToDoListDTO.builder()
+                .todoId(entity.getTodoId())
+                .id(entity.getUser().getId())
+                .todoContent(entity.getTodoContent())
+                .createdAt(entity.getCreatedAt())
+                .deadline(entity.getDeadline())
+                .state(entity.getState().toString())
+                .build();
+    }
+
+    public ToDoListDTO updateTodo(int todoId, TodoListUpdateDTO updateDTO) {
+        ToDoListEntity entity = toDoListRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ToDo 항목을 찾을 수 없습니다."));
+
+        entity.update(updateDTO);
+        ToDoListEntity updatedEntity = toDoListRepository.save(entity);
+
+        return convertToDto(updatedEntity);
+    }
+
+    public void deleteById(int todoId) {
+        ToDoListEntity todo = toDoListRepository.findById(todoId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 할 일을 찾을 수 없습니다."));
+        toDoListRepository.delete(todo);
     }
 
 }

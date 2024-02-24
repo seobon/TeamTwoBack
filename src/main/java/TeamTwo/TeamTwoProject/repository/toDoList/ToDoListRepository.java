@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface ToDoListRepository extends JpaRepository<ToDoListEntity, Integer> {
     // get
     Optional<ToDoListEntity> findById(Integer id);
+    List<ToDoListEntity> findAllByUserId(int id);
 
 }
 
