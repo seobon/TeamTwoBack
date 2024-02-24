@@ -44,11 +44,11 @@ public class DiaryEntity {
     @Column(name = "updatedAt")
     private String updatedAt;
 
-    @Column(name = "location", nullable = false)
-    private String location;
+    @Column(name = "currentLocation", nullable = false)
+    private double[] currentLocation;
 
     @Column(name = "weather", nullable = false)
-    private int weather;
+    private String weather;
 
     @Column(name = "isPublic", nullable = false)
     private boolean isPublic;
