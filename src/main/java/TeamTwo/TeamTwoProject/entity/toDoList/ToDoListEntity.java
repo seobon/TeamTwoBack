@@ -1,5 +1,6 @@
 package TeamTwo.TeamTwoProject.entity.toDoList;
 
+import TeamTwo.TeamTwoProject.dto.toDoList.TodoListUpdateDTO;
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class ToDoListEntity {
     @Column(name = "todoId", nullable = false)
     private int todoId;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "id", nullable = false)
     private UserEntity user;
 
@@ -38,8 +39,8 @@ public class ToDoListEntity {
     @Column(name = "state", nullable = false)
     private State state;
     public enum State {
-        NOTSTART("notstart"),
-        DONE("done");
+        notstart("notstart"),
+        done("done");
 
         private String value;
 
@@ -57,7 +58,22 @@ public class ToDoListEntity {
                     return state;
                 }
             }
-            throw new IllegalArgumentException("Invalid state value");
+            System.out.println("Invalid state value: " + value);
+            throw new IllegalArgumentException("Invalid state Value");
+        }
+    }
+    public void update(TodoListUpdateDTO updateDTO) {
+        if (updateDTO.getNewTodoContent() != null) {
+            this.todoContent = updateDTO.getNewTodoContent();
+        }
+        if (updateDTO.getNewCreatedAt() != null) {
+            this.createdAt = updateDTO.getNewCreatedAt();
+        }
+        if (updateDTO.getNewState() != null) {
+            this.state = State.fromString(updateDTO.getNewState());
+        }
+        if (updateDTO.getNewDeadline() != null) {
+            this.deadline = updateDTO.getNewDeadline();
         }
     }
 }

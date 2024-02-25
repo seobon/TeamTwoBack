@@ -75,8 +75,9 @@ public class UserService {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 
-        // 이미지 파일을 저장할 디렉토리 ( 각자의 경로로 수정해야함)
-        Path uploadDir = Paths.get("/Users/kyoungdolee/Desktop/TeamTwoBack/src/main/resources/static/images");
+        // 이미지 파일을 저장할 디렉토리 ( 각자의 경로로 수정해야함) C:\Users\SBA_USER\Desktop\GitHub\TeamTwoProject\src\main\resources\static\images
+        Path uploadDir = Paths.get("/");
+        log.warn("path: {}", uploadDir);
 
         // 디렉토리가 없으면 생성
         if (!Files.exists(uploadDir)) {
@@ -164,6 +165,30 @@ public class UserService {
             return null;
         }
     }
+    //회원 수정(닉네임만)
+    public UserEntity updateUserNickname(String userid, String newNickName) {
+        try {
+            UserEntity user = userRepository.findByUserid(userid);
+
+            UserEntity updateUserNickName = UserEntity.builder()
+                    .id(user.getId())
+                    .userid(user.getUserid())
+                    .nickname(newNickName)
+                    .password(user.getPassword())
+                    .salt(user.getSalt())
+                    .email(user.getEmail())
+                    .nickname(newNickName)
+                    .image(user.getImage())
+                    .build();
+
+            System.out.println(updateUserNickName);
+            return userRepository.save(updateUserNickName);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
     // 회원 삭제
     public void deleteUser(String userid, String currentPassword) {
@@ -175,6 +200,9 @@ public class UserService {
             } else {
                 throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
             }
+
+
+
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new RuntimeException("사용자 삭제 중 오류가 발생했습니다.");
