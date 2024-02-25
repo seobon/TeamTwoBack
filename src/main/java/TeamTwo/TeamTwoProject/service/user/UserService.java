@@ -164,6 +164,30 @@ public class UserService {
             return null;
         }
     }
+    //회원 수정(닉네임만)
+    public UserEntity updateUserNickname(String userid, String newNickName) {
+        try {
+            UserEntity user = userRepository.findByUserid(userid);
+
+            UserEntity updateUserNickName = UserEntity.builder()
+                    .id(user.getId())
+                    .userid(user.getUserid())
+                    .nickname(newNickName)
+                    .password(user.getPassword())
+                    .salt(user.getSalt())
+                    .email(user.getEmail())
+                    .nickname(newNickName)
+                    .image(user.getImage())
+                    .build();
+
+            System.out.println(updateUserNickName);
+            return userRepository.save(updateUserNickName);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
+    }
 
     // 회원 삭제
     public void deleteUser(String userid, String currentPassword) {
