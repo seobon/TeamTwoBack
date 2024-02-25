@@ -4,6 +4,7 @@ import TeamTwo.TeamTwoProject.dto.diary.DiaryDTO;
 import TeamTwo.TeamTwoProject.dto.diary.DiaryUserDTO;
 import TeamTwo.TeamTwoProject.dto.diary.DiaryUserReactionDTO;
 import TeamTwo.TeamTwoProject.dto.reaction.ReactionDTO;
+import TeamTwo.TeamTwoProject.entity.diary.DiaryEntity;
 import TeamTwo.TeamTwoProject.service.diary.DiaryService;
 import TeamTwo.TeamTwoProject.service.reaction.ReactionService;
 import lombok.extern.slf4j.Slf4j;
@@ -87,13 +88,9 @@ public class DiaryController {
 
     // 검색
     @GetMapping("/search")
-    public ResponseEntity<List<DiaryUserDTO>> search(String searchWord){
-        List<DiaryUserDTO> result = diaryService.search(searchWord);
-        if (result == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(result);
-        }
+    public List<DiaryUserDTO> search(@RequestParam(required = false) Integer page, @RequestBody String searchWord){
+        List<DiaryUserDTO> result = diaryService.search(page, searchWord);
+        return result;
     }
 
     // 다이어리 수정

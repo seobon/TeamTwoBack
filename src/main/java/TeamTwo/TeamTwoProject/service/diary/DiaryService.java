@@ -232,30 +232,55 @@ public class DiaryService {
     }
 
     // 검색
-    public List<DiaryUserDTO> search(String searchWord) {
+    public List<DiaryUserDTO> search(Integer page, String searchWord) {
         String diaryTitle = searchWord;
         String diaryContent = searchWord;
-
-        List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
         List<DiaryUserDTO> searchResult = new ArrayList<>();
 
-        if (!searchData.isEmpty()) {
-            for (DiaryEntity DiaryData : searchData) {
+        if (page == null) {
+            List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
+
+            if (!searchData.isEmpty()) {
+                for (DiaryEntity DiaryData : searchData) {
+                    DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                            .nickname(DiaryData.getUser().getNickname())
+                            .image(DiaryData.getUser().getImage())
+                            .diaryId(DiaryData.getDiaryId())
+                            .diaryTitle(DiaryData.getDiaryTitle())
+                            .diaryContent(DiaryData.getDiaryContent())
+                            .msg("Search Success : 검색을 성공했습니다.")
+                            .build();
+                    searchResult.add(diaryUserDTO);
+                }
+            } else {
                 DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                        .nickname(DiaryData.getUser().getNickname())
-                        .image(DiaryData.getUser().getImage())
-                        .diaryId(DiaryData.getDiaryId())
-                        .diaryTitle(DiaryData.getDiaryTitle())
-                        .diaryContent(DiaryData.getDiaryContent())
-                        .msg("Search Success : 검색을 성공했습니다.")
+                        .msg("Get Every Diary Error : 검색 결과가 없습니다.")
                         .build();
                 searchResult.add(diaryUserDTO);
             }
         } else {
-            DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                    .msg("Get Every Diary Error : 검색 결과가 없습니다.")
-                    .build();
-            searchResult.add(diaryUserDTO);
+            PageRequest pageRequest = PageRequest.of(page, 6, Sort.by("createdAt").descending());
+            Page<DiaryEntity> searchPageData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent, pageRequest);
+            List<DiaryEntity> searchData = searchPageData.getContent();
+
+            if (!searchPageData.getContent().isEmpty()) {
+                for (DiaryEntity DiaryData : searchData) {
+                    DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                            .nickname(DiaryData.getUser().getNickname())
+                            .image(DiaryData.getUser().getImage())
+                            .diaryId(DiaryData.getDiaryId())
+                            .diaryTitle(DiaryData.getDiaryTitle())
+                            .diaryContent(DiaryData.getDiaryContent())
+                            .msg("Search Success : 검색을 성공했습니다.")
+                            .build();
+                    searchResult.add(diaryUserDTO);
+                }
+            } else {
+                DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                        .msg("Get Every Diary Error : 검색 결과가 없습니다.")
+                        .build();
+                searchResult.add(diaryUserDTO);
+            }
         }
         return searchResult;
     }
