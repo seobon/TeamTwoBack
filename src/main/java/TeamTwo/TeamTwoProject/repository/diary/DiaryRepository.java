@@ -22,11 +22,7 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
     List<DiaryEntity> findByIsPublic(boolean isPublic);
     Page<DiaryEntity> findByIsPublic(boolean isPublic, Pageable pageRequest);
 
-    // getEveryDiary?page={?}
-//    @Query(nativeQuery = true, value= "SELECT * FROM diary de WHERE de.is_public = :isPublic ORDER BY de.created_date DESC LIMIT 6 OFFSET (:page - 1) * 6")
-//    List<DiaryEntity> findByIsPublicOrderByCreatedDateDesc(boolean isPublic, Pageable pageable);
-
-
     // search
     List<DiaryEntity> findByDiaryTitleContainingOrDiaryContentContaining(String diaryTitle, String diaryContent);
+    Page<DiaryEntity> findByDiaryTitleContainingOrDiaryContentContaining(String diaryTitle, String diaryContent, Pageable pageRequest);
 }
