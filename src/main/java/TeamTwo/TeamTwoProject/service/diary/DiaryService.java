@@ -11,6 +11,11 @@ import TeamTwo.TeamTwoProject.repository.reaction.ReactionRepository;
 import TeamTwo.TeamTwoProject.repository.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -130,29 +135,58 @@ public class DiaryService {
     }
 
     // 공개 다이어리 모두 조회
-    public List<DiaryUserDTO> getEveryDiary() {
+    public List<DiaryUserDTO> getEveryDiary(Integer page) {
         boolean isPublic = true;
-        List<DiaryEntity> getEveryDiaryData = diaryRepository.findByIsPublic(isPublic);
         List<DiaryUserDTO> getEveryDiaryResult = new ArrayList<>();
 
-        if (!getEveryDiaryData.isEmpty()) {
-            for (DiaryEntity DiaryData : getEveryDiaryData) {
+        if (page == null) {
+            List<DiaryEntity> getEveryDiaryData;
+            getEveryDiaryData = diaryRepository.findByIsPublic(isPublic);
+
+            if (!getEveryDiaryData.isEmpty()) {
+                for (DiaryEntity DiaryData : getEveryDiaryData) {
+                    DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                            .nickname(DiaryData.getUser().getNickname())
+                            .image(DiaryData.getUser().getImage())
+                            .diaryId(DiaryData.getDiaryId())
+                            .diaryTitle(DiaryData.getDiaryTitle())
+                            .diaryContent(DiaryData.getDiaryContent())
+                            .isPublic(DiaryData.isPublic())
+                            .msg("Get Every Diary Success : 다이어리 조회를 성공했습니다.")
+                            .build();
+                    getEveryDiaryResult.add(diaryUserDTO);
+                }
+            } else {
                 DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                        .nickname(DiaryData.getUser().getNickname())
-                        .image(DiaryData.getUser().getImage())
-                        .diaryId(DiaryData.getDiaryId())
-                        .diaryTitle(DiaryData.getDiaryTitle())
-                        .diaryContent(DiaryData.getDiaryContent())
-                        .isPublic(DiaryData.isPublic())
-                        .msg("Get Every Diary Success : 다이어리 조회를 성공했습니다.")
+                        .msg("Get Every Diary Error : 다이어리 조회를 실패했습니다.")
                         .build();
                 getEveryDiaryResult.add(diaryUserDTO);
             }
         } else {
-            DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                    .msg("Get Every Diary Error : 다이어리 조회를 실패했습니다.")
-                    .build();
-            getEveryDiaryResult.add(diaryUserDTO);
+            PageRequest pageRequest = PageRequest.of(page, 6, Sort.by("createdAt").descending());
+            Page<DiaryEntity> getEveryDiaryPageData = diaryRepository.findByIsPublic(isPublic, pageRequest);
+            List<DiaryEntity> getEveryDiaryData = getEveryDiaryPageData.getContent();
+
+            if (!getEveryDiaryPageData.getContent().isEmpty()) {
+                for (DiaryEntity DiaryData : getEveryDiaryData) {
+                    DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                            .nickname(DiaryData.getUser().getNickname())
+                            .image(DiaryData.getUser().getImage())
+                            .diaryId(DiaryData.getDiaryId())
+                            .diaryTitle(DiaryData.getDiaryTitle())
+                            .diaryContent(DiaryData.getDiaryContent())
+                            .isPublic(DiaryData.isPublic())
+                            .pageCount(getEveryDiaryPageData.getTotalPages())
+                            .msg("Get Every Diary Success : 다이어리 조회를 성공했습니다.")
+                            .build();
+                    getEveryDiaryResult.add(diaryUserDTO);
+                }
+            } else {
+                DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                        .msg("Get Every Diary Error : 다이어리 조회를 실패했습니다.")
+                        .build();
+                getEveryDiaryResult.add(diaryUserDTO);
+            }
         }
         return getEveryDiaryResult;
     }
@@ -198,30 +232,55 @@ public class DiaryService {
     }
 
     // 검색
-    public List<DiaryUserDTO> search(String searchWord) {
+    public List<DiaryUserDTO> search(Integer page, String searchWord) {
         String diaryTitle = searchWord;
         String diaryContent = searchWord;
-
-        List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
         List<DiaryUserDTO> searchResult = new ArrayList<>();
 
-        if (!searchData.isEmpty()) {
-            for (DiaryEntity DiaryData : searchData) {
+        if (page == null) {
+            List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
+
+            if (!searchData.isEmpty()) {
+                for (DiaryEntity DiaryData : searchData) {
+                    DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                            .nickname(DiaryData.getUser().getNickname())
+                            .image(DiaryData.getUser().getImage())
+                            .diaryId(DiaryData.getDiaryId())
+                            .diaryTitle(DiaryData.getDiaryTitle())
+                            .diaryContent(DiaryData.getDiaryContent())
+                            .msg("Search Success : 검색을 성공했습니다.")
+                            .build();
+                    searchResult.add(diaryUserDTO);
+                }
+            } else {
                 DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                        .nickname(DiaryData.getUser().getNickname())
-                        .image(DiaryData.getUser().getImage())
-                        .diaryId(DiaryData.getDiaryId())
-                        .diaryTitle(DiaryData.getDiaryTitle())
-                        .diaryContent(DiaryData.getDiaryContent())
-                        .msg("Search Success : 검색을 성공했습니다.")
+                        .msg("Get Every Diary Error : 검색 결과가 없습니다.")
                         .build();
                 searchResult.add(diaryUserDTO);
             }
         } else {
-            DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
-                    .msg("Get Every Diary Error : 검색 결과가 없습니다.")
-                    .build();
-            searchResult.add(diaryUserDTO);
+            PageRequest pageRequest = PageRequest.of(page, 6, Sort.by("createdAt").descending());
+            Page<DiaryEntity> searchPageData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent, pageRequest);
+            List<DiaryEntity> searchData = searchPageData.getContent();
+
+            if (!searchPageData.getContent().isEmpty()) {
+                for (DiaryEntity DiaryData : searchData) {
+                    DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                            .nickname(DiaryData.getUser().getNickname())
+                            .image(DiaryData.getUser().getImage())
+                            .diaryId(DiaryData.getDiaryId())
+                            .diaryTitle(DiaryData.getDiaryTitle())
+                            .diaryContent(DiaryData.getDiaryContent())
+                            .msg("Search Success : 검색을 성공했습니다.")
+                            .build();
+                    searchResult.add(diaryUserDTO);
+                }
+            } else {
+                DiaryUserDTO diaryUserDTO = DiaryUserDTO.builder()
+                        .msg("Get Every Diary Error : 검색 결과가 없습니다.")
+                        .build();
+                searchResult.add(diaryUserDTO);
+            }
         }
         return searchResult;
     }

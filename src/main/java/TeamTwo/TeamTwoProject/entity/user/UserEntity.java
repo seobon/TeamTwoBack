@@ -1,6 +1,7 @@
 package TeamTwo.TeamTwoProject.entity.user;
 
 import TeamTwo.TeamTwoProject.dto.diary.DiaryDTO;
+import TeamTwo.TeamTwoProject.entity.toDoList.ToDoListEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,10 @@ public class UserEntity {
 
     @Column(name = "image")
     private String image;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<ToDoListEntity> toDoListEntities = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "userMap")
 //    List<DiaryDTO> diaryDTOS = new ArrayList<>();
