@@ -27,6 +27,13 @@ public class DiaryController {
     @Autowired
     ReactionService reactionService;
 
+    // 다이어리 작성자 일치 확인
+    @GetMapping("/checkUser")
+    public int getCalendar(@RequestParam int diaryId){
+        int result = diaryService.checkUser(diaryId);
+        return result;
+    }
+
     // 다이어리를 작성한 날짜 조회 (캘린더 정보)
     @GetMapping("/getCalendar")
     public ResponseEntity<List<DiaryDTO>> getCalendar(@RequestParam int id, @RequestParam String month){

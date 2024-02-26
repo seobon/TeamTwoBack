@@ -12,7 +12,7 @@ public class DiaryUserDTO {
     private String image;
 
     private int diaryId;
-    private String id;
+    private int id;
     private String diaryTitle;
     private String diaryContent;
     private String mood;

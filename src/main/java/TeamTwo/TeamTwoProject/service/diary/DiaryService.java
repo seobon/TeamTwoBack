@@ -32,6 +32,12 @@ public class DiaryService {
     @Autowired
     private UserRepository userRepository;
 
+    // 다이어리 작성자 일치 확인
+    public int checkUser(int diaryId){
+        DiaryEntity getCheckUserData = diaryRepository.findByDiaryId(diaryId);
+        return getCheckUserData.getUser().getId();
+    }
+
     // 다이어리를 작성한 날짜 조회 (캘린더 정보)
     public List<DiaryDTO> getCalendar(int id, String createdAt) {
         List<DiaryEntity> getCalendarData = diaryRepository.findByCreatedAtContainingAndUser_id(createdAt, id);
@@ -75,6 +81,7 @@ public class DiaryService {
 
         if (getMyDiaryData != null) {
             DiaryUserReactionDTO diaryUserReactionDTO = DiaryUserReactionDTO.builder()
+                    .id(getMyDiaryData.getUser().getId())
                     .nickname(getMyDiaryData.getUser().getNickname())
                     .image(getMyDiaryData.getUser().getImage())
                     .diaryId(getMyDiaryData.getDiaryId())
