@@ -129,6 +129,7 @@ public class DiaryService {
                 .diaryContent(diaryDTO.getDiaryContent())
                 .mood(diaryDTO.getMood())
                 .currentLocation(diaryDTO.getCurrentLocation())
+                .weather("맑음")
                 .isPublic(diaryDTO.isPublic())
                 .build();
         return diaryRepository.save(postDiaryData);

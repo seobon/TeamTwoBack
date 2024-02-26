@@ -54,12 +54,13 @@ public class DiaryController {
     @PostMapping("/postDiary")
     public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
         try {
-            double[] location = CurrentLocationApi.getCurrentLocation();
+//            double[] location = CurrentLocationApi.getCurrentLocation();
+            double[] location = diaryDTO.getCurrentLocation();
             double latitude = location[0];
             double longitude = location[1];
-            WeatherCustomData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
-            diaryDTO.setWeather(weatherData.getWeatherDescription());
-            diaryDTO.setWeather(String.valueOf(weatherData.getTemperature()));
+//            WeatherCustomData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
+//            diaryDTO.setWeather(weatherData.getWeatherDescription());
+//            diaryDTO.setWeather(String.valueOf(weatherData.getTemperature()));
           
             diaryService.postDiary(diaryDTO);
             return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
