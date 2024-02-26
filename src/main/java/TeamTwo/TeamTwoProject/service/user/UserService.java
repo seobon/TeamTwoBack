@@ -37,16 +37,6 @@ public class UserService {
             throw new RuntimeException("entity null");
         }
 
-        UserEntity existingUser = userRepository.findByUserid(userEntity.getUserid());
-        if (existingUser != null) {
-            throw new RuntimeException("아이디가 이미 존재합니다");
-        }
-
-        existingUser = userRepository.findByNickname(userEntity.getNickname());
-        if (existingUser != null) {
-            throw new RuntimeException("닉네임이 이미 존재합니다");
-        }
-
         String salt = new BigInteger(130, random).toString(32);
         String encodedPassword = passwordEncoder.encode(userEntity.getPassword() + salt);
 
@@ -60,6 +50,15 @@ public class UserService {
                 .build();
         return userRepository.save(user);
     }
+
+    public boolean checkId(String userid) {
+        return Optional.ofNullable( userRepository.findByUserid(userid)).isPresent();
+    }
+
+    public boolean checkNickname(String nickname) {
+        return Optional.ofNullable(userRepository.findByNickname(nickname)).isPresent();
+    }
+
     // 로그인
     public UserEntity login(String userid, String password) {
         UserEntity user = userRepository.findByUserid(userid);
