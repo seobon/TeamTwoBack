@@ -48,6 +48,7 @@ public class DiaryEntity {
     private String createdAt;
 
     @LastModifiedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updatedAt")
     private String updatedAt;
 
