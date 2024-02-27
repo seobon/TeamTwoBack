@@ -42,6 +42,14 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDTO userDTO) {
         try {
+            // 아이디와 닉네임 중복 확인
+            if (userService.checkId(userDTO.getUserid())) {
+                return ResponseEntity.badRequest().body("이미 사용 중인 아이디입니다.");
+            }
+            if (userService.checkNickname(userDTO.getNickname())) {
+                return ResponseEntity.badRequest().body("이미 사용 중인 닉네임입니다.");
+            }
+
             UserEntity user = UserEntity.builder()
                     .userid(userDTO.getUserid())
                     .password(userDTO.getPassword())
@@ -56,14 +64,14 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    // 아이디 중복확인
     @PostMapping("/checkid")
     public ResponseEntity<?> duplicateCheckId(@RequestBody UserDTO userDTO) {
         return userService.checkId(userDTO.getUserid())
                 ? ResponseEntity.ok().body("이미 사용 중인 아이디입니다.")
                 : ResponseEntity.ok().body("사용 가능한 아이디입니다.");
     }
-
+    // 닉네임 중복확인
     @PostMapping("/checknickname")
     public ResponseEntity<?> duplicateCheckNickname(@RequestBody UserDTO userDTO) {
         return userService.checkNickname(userDTO.getNickname())
