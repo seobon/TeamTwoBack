@@ -27,6 +27,13 @@ public class DiaryController {
     @Autowired
     ReactionService reactionService;
 
+    // 다이어리 작성자 일치 확인
+    @GetMapping("/checkUser")
+    public int getCalendar(@RequestParam int diaryId){
+        int result = diaryService.checkUser(diaryId);
+        return result;
+    }
+
     // 다이어리를 작성한 날짜 조회 (캘린더 정보)
     @GetMapping("/getCalendar")
     public ResponseEntity<List<DiaryDTO>> getCalendar(@RequestParam int id, @RequestParam String month){
@@ -55,13 +62,13 @@ public class DiaryController {
     public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
         try {
 //            double[] location = CurrentLocationApi.getCurrentLocation();
-            double[] location = diaryDTO.getCurrentLocation();
-            double latitude = location[0];
-            double longitude = location[1];
+//            double[] location = diaryDTO.getCurrentLocation();
+//            double latitude = location[0];
+//            double longitude = location[1];
 //            WeatherCustomData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
 //            diaryDTO.setWeather(weatherData.getWeatherDescription());
 //            diaryDTO.setWeather(String.valueOf(weatherData.getTemperature()));
-          
+
             diaryService.postDiary(diaryDTO);
             return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
         } catch (Exception e) {
