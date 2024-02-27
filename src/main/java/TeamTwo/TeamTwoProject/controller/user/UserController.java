@@ -185,7 +185,7 @@ public class UserController {
     @GetMapping("/profile/{userid}")
     public ResponseEntity<UserEntity> getUser(@PathVariable("userid") String userid) {
         UserEntity user = userService.getUser(userid);
-        String imageUrl = userService.getImageUrl(userid);
+        
         if (user == null) {
             return ResponseEntity.notFound().build();
         } else {
