@@ -4,6 +4,7 @@ import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.repository.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,8 +14,6 @@ import java.security.SecureRandom;
 import java.util.Optional;
 import java.lang.Exception;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,7 +69,7 @@ public class UserService {
     }
 
     // 이미지 저장
-    public void saveImage(int id, MultipartFile image) throws Exception {
+    public String saveImage(int id, MultipartFile image) throws Exception {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 
@@ -87,6 +86,7 @@ public class UserService {
 
         user = user.toBuilder().image(imageName).build();
         userRepository.save(user);
+        return imageName;
     }
 
     // 이미지 파일체크
@@ -132,6 +132,14 @@ public class UserService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    // 이미지 Url 가져오기
+    public String getImageUrl(int id) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
+        return user.getImage();
+
     }
 
     //회원 수정

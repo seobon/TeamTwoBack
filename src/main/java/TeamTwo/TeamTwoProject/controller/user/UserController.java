@@ -162,8 +162,19 @@ public class UserController {
     @PostMapping("/image/{id}")
     public ResponseEntity<?> uploadImage(@PathVariable int id, @RequestParam("image") MultipartFile image) {
         try {
-            userService.saveImage(id, image);
-            return ResponseEntity.ok().body("이미지 업로드 성공");
+            String imageUrl= userService.saveImage(id, image);
+            return ResponseEntity.ok().body(imageUrl);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // 이미지 url가져오기
+    @GetMapping("/image/{id}")
+    public ResponseEntity<?> getImageUrl(@PathVariable int id) {
+        try {
+            String imageUrl = userService.getImageUrl(id);
+            return ResponseEntity.ok().body(imageUrl);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -174,6 +185,7 @@ public class UserController {
     @GetMapping("/profile/{userid}")
     public ResponseEntity<UserEntity> getUser(@PathVariable("userid") String userid) {
         UserEntity user = userService.getUser(userid);
+        String imageUrl = userService.getImageUrl(userid);
         if (user == null) {
             return ResponseEntity.notFound().build();
         } else {
