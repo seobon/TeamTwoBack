@@ -9,6 +9,8 @@ import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import TeamTwo.TeamTwoProject.repository.diary.DiaryRepository;
 import TeamTwo.TeamTwoProject.repository.reaction.ReactionRepository;
 import TeamTwo.TeamTwoProject.repository.user.UserRepository;
+import TeamTwo.TeamTwoProject.service.CurrentLocationApi;
+import TeamTwo.TeamTwoProject.service.WeatherApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -129,10 +132,10 @@ public class DiaryService {
 //        }
 
         String locationString = "37.566295, 126.977945";
-        String[] coordinates = locationString.split(", ");
-        double latitude = Double.parseDouble(coordinates[0]);
-        double longitude = Double.parseDouble(coordinates[1]);
-        double[] location = {latitude, longitude};
+//        String[] coordinates = locationString.split(", ");
+//        double latitude = Double.parseDouble(coordinates[0]);
+//        double longitude = Double.parseDouble(coordinates[1]);
+//        double[] location = {latitude, longitude};
 
         UserEntity userData = userRepository.findById(diaryDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
@@ -141,7 +144,7 @@ public class DiaryService {
                 .diaryTitle(diaryDTO.getDiaryTitle())
                 .diaryContent(diaryDTO.getDiaryContent())
                 .mood(diaryDTO.getMood())
-                .currentLocation(location)
+                .currentLocation(locationString)
                 .weather("맑음")
                 .isPublic(diaryDTO.isPublic())
                 .build();

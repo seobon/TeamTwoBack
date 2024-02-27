@@ -18,7 +18,7 @@ public class DiaryUserReactionDTO {
     private String mood;
     private String createdAt;
     private String updatedAt;
-    private double[] currentLocation;
+    private String currentLocation;
     private String weather;
     private boolean isPublic;
 
@@ -30,12 +30,5 @@ public class DiaryUserReactionDTO {
     private int angry;
 
     private String msg;
-
-    public void setCurrentLocation(double[] currentLocation) {
-        this.currentLocation = currentLocation;
-    }
-    public void setWeather(String weather) {
-        this.weather = weather;
-    }
 };
 

@@ -49,6 +49,19 @@ public class DiaryController {
     // 내 다이어리 조회
     @GetMapping("/getMyDiary")
     public ResponseEntity<DiaryUserReactionDTO> getMyDiary(@RequestParam int diaryId){
+//        try {
+//            DiaryEntity diary = diaryService.fjndDiaryById(diaryId);
+//            String currentLocation = diary.getCurrentLocation();
+//            String weather = diary.getWeather();
+//
+//            DiaryUserReactionDTO result = new DiaryUserReactionDTO();
+//            result.setCurrentLocation(currentLocation);
+//            result.setWeather(weather);
+//
+//            return ResponseEntity.ok(result);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
         DiaryUserReactionDTO result = diaryService.getMyDiary(diaryId);
         if (result == null) {
             return ResponseEntity.notFound().build();
@@ -61,13 +74,14 @@ public class DiaryController {
     @PostMapping("/postDiary")
     public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
         try {
-//            double[] location = CurrentLocationApi.getCurrentLocation();
-//            double[] location = diaryDTO.getCurrentLocation();
-//            double latitude = location[0];
-//            double longitude = location[1];
-//            WeatherCustomData weatherData = WeatherApi.getCurrentWeather(latitude, longitude);
-//            diaryDTO.setWeather(weatherData.getWeatherDescription());
-//            diaryDTO.setWeather(String.valueOf(weatherData.getTemperature()));
+//            String currentLocation = diaryDTO.getCurrentLocation();
+//            String weather = diaryDTO.getWeather();
+//
+//            DiaryEntity newDiary = new DiaryEntity();
+//            newDiary.setDiaryTitle(diaryDTO.getDiaryTitle());
+//            newDiary.setDiaryContent(diaryDTO.getDiaryContent());
+//            newDiary.setCurrentLocation(currentLocation);
+//            newDiary.setWeather(weather);
 
             diaryService.postDiary(diaryDTO);
             return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");

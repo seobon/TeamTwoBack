@@ -3,10 +3,7 @@ package TeamTwo.TeamTwoProject.entity.diary;
 import TeamTwo.TeamTwoProject.entity.user.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "diary")
 public class DiaryEntity {
@@ -53,7 +51,7 @@ public class DiaryEntity {
     private String updatedAt;
 
     @Column(name = "currentLocation", nullable = false)
-    private double[] currentLocation;
+    private String currentLocation;
 
     @Column(name = "weather", nullable = false)
     private String weather;

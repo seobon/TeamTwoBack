@@ -3,12 +3,15 @@ package TeamTwo.TeamTwoProject.service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+@Component
 public class CurrentLocationApi {
     @Value("${GOOGLE_GEOLOCATION_API_KEY}")
     private static String GOOGLE_GEOLOCATION_API_KEY;

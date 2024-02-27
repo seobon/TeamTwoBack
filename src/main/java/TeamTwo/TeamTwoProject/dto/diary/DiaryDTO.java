@@ -18,7 +18,7 @@ public class DiaryDTO {
     private String mood;
     private String createdAt;
     private String updatedAt;
-    private double[] currentLocation;
+    private String currentLocation;
     private String weather;
     private boolean isPublic;
 
