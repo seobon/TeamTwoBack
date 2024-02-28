@@ -329,7 +329,9 @@ public class DiaryService {
     public void deleteDiary(DiaryDTO diaryDTO) {
         try {
             ReactionEntity ReactionData = reactionRepository.findByDiary_diaryId(diaryDTO.getDiaryId());
-            reactionRepository.delete(ReactionData);
+            if (ReactionData != null) {
+                reactionRepository.delete(ReactionData);
+            }
             DiaryEntity DiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
             diaryRepository.delete(DiaryData);
         } catch (Exception e) {
