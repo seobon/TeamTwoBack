@@ -20,7 +20,7 @@ public class TokenProvider {
 
     // 토큰 발급하는 메소드 만들기
     public String createAccessToken(UserEntity userEntity) {
-        Date expireDate = Date.from(Instant.now().plus(2, ChronoUnit.HOURS));
+        Date expireDate = Date.from(Instant.now().plus(5, ChronoUnit.HOURS));
         return createToken(userEntity, expireDate);
     }
 
