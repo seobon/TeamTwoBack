@@ -74,15 +74,6 @@ public class DiaryController {
     @PostMapping("/postDiary")
     public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
         try {
-            String currentLocation = diaryDTO.getCurrentLocation();
-            String weather = diaryDTO.getWeather();
-
-            DiaryEntity newDiary = new DiaryEntity();
-            newDiary.setDiaryTitle(diaryDTO.getDiaryTitle());
-            newDiary.setDiaryContent(diaryDTO.getDiaryContent());
-            newDiary.setCurrentLocation(currentLocation);
-            newDiary.setWeather(weather);
-
             diaryService.postDiary(diaryDTO);
             return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
         } catch (Exception e) {
@@ -135,10 +126,11 @@ public class DiaryController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
     
     // 타인의 다이어리에 반응하기
     @PatchMapping("/reaction")
-    public ResponseEntity reaction(@RequestBody ReactionDTO reactionDTO){
+    public ResponseEntity reaction(@RequestBody ReactionDTO reactionDTO) {
         try {
             reactionService.reaction(reactionDTO);
             return ResponseEntity.ok().body("Reaction Success : 반응 등록을 성공했습니다.");
