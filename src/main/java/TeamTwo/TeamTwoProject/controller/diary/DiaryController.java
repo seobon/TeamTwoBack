@@ -74,14 +74,14 @@ public class DiaryController {
     @PostMapping("/postDiary")
     public ResponseEntity postDiary(@RequestBody DiaryDTO diaryDTO){
         try {
-//            String currentLocation = diaryDTO.getCurrentLocation();
-//            String weather = diaryDTO.getWeather();
-//
-//            DiaryEntity newDiary = new DiaryEntity();
-//            newDiary.setDiaryTitle(diaryDTO.getDiaryTitle());
-//            newDiary.setDiaryContent(diaryDTO.getDiaryContent());
-//            newDiary.setCurrentLocation(currentLocation);
-//            newDiary.setWeather(weather);
+            String currentLocation = diaryDTO.getCurrentLocation();
+            String weather = diaryDTO.getWeather();
+
+            DiaryEntity newDiary = new DiaryEntity();
+            newDiary.setDiaryTitle(diaryDTO.getDiaryTitle());
+            newDiary.setDiaryContent(diaryDTO.getDiaryContent());
+            newDiary.setCurrentLocation(currentLocation);
+            newDiary.setWeather(weather);
 
             diaryService.postDiary(diaryDTO);
             return ResponseEntity.ok().body("Post Diary Success : 다이어리 작성에 성공했습니다.");
@@ -110,7 +110,7 @@ public class DiaryController {
 
     // 검색
     @GetMapping("/search")
-    public List<DiaryUserDTO> search(@RequestParam(required = false) Integer page, @RequestBody String searchWord){
+    public List<DiaryUserDTO> search (@RequestParam(required = false) Integer page, String searchWord){
         List<DiaryUserDTO> result = diaryService.search(page, searchWord);
         return result;
     }
@@ -132,7 +132,7 @@ public class DiaryController {
         try {
             diaryService.deleteDiary(diaryDTO);
             return ResponseEntity.ok("Delete Diary Success : 다이어리가 삭제되었습니다.");
-
+//        return diaryDTO.getDiaryId();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
