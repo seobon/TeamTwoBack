@@ -128,16 +128,14 @@ public class DiaryController {
 
     // 다이어리 삭제
     @DeleteMapping("/deleteDiary")
-    public ResponseEntity deleteDiary(@RequestBody DiaryDTO diaryDTO){
+    public ResponseEntity deleteDiary(@RequestParam(required = false) int diaryId){
         try {
-            diaryService.deleteDiary(diaryDTO);
+            diaryService.deleteDiary(diaryId);
             return ResponseEntity.ok("Delete Diary Success : 다이어리가 삭제되었습니다.");
-//        return diaryDTO.getDiaryId();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-    }
-
+    
     // 타인의 다이어리에 반응하기
     @PatchMapping("/reaction")
     public ResponseEntity reaction(@RequestBody ReactionDTO reactionDTO){

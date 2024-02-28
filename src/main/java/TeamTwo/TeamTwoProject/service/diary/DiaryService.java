@@ -326,13 +326,13 @@ public class DiaryService {
     }
 
     // 다이어리 삭제
-    public void deleteDiary(DiaryDTO diaryDTO) {
+    public void deleteDiary(int diaryId) {
         try {
-            ReactionEntity ReactionData = reactionRepository.findByDiary_diaryId(diaryDTO.getDiaryId());
+            ReactionEntity ReactionData = reactionRepository.findByDiary_diaryId(diaryId);
             if (ReactionData != null) {
                 reactionRepository.delete(ReactionData);
             }
-            DiaryEntity DiaryData = diaryRepository.findByDiaryId(diaryDTO.getDiaryId());
+            DiaryEntity DiaryData = diaryRepository.findByDiaryId(diaryId);
             diaryRepository.delete(DiaryData);
         } catch (Exception e) {
             log.error(e.getMessage());
