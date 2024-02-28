@@ -17,7 +17,7 @@ public class CurrentLocationApi {
     private static String GOOGLE_GEOLOCATION_API_KEY;
     private static String GOOGLE_GEOLOCATION_API_URL = "https://www.googleapis.com/geolocation/v1/geolocate?key=%s";
 
-    public static double[] getCurrentLocation() throws IOException {
+    public static String[] getCurrentLocation() throws IOException {
         String apiUrl = String.format(GOOGLE_GEOLOCATION_API_URL, GOOGLE_GEOLOCATION_API_KEY);
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -38,9 +38,9 @@ public class CurrentLocationApi {
 
         JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
         JsonObject location = jsonObject.getAsJsonObject("location");
-        double latitude = location.get("lat").getAsDouble();
-        double longitude = location.get("lng").getAsDouble();
+        String latitude = location.get("lat").getAsString();
+        String longitude = location.get("lng").getAsString();
 
-        return new double[]{latitude, longitude};
+        return new String[]{latitude, longitude};
     }
 }
