@@ -23,22 +23,20 @@ public class WeatherApi {
     private static String GOOGLE_GEOLOCATION_API_URL = "https://www.googleapis.com/geolocation/v1/geolocate?key=%s";
     private static String OPENWEATHERMAP_API_URL = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s";
 
-    public static void main(String[] args) {
+    public WeatherCustomData getCurrentWeather() {
         try {
-            // 현재 위치의 위도와 경도를 가져옴
-            double[] location = getCurrentLocation();
-            double latitude = location[0];
-            double longitude = location[1];
+            String[] location = getCurrentLocation();
+            String latitude = location[0];
+            String longitude = location[1];
 
-            // 현재 위치의 날씨 정보를 가져옴
-            WeatherCustomData weatherData = getCurrentWeather(latitude, longitude);
-            displayWeatherInfo(weatherData);
+            return getCurrentWeather(latitude, longitude);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    private static double[] getCurrentLocation() throws IOException {
+    private static String[] getCurrentLocation() throws IOException {
         String apiUrl = String.format(GOOGLE_GEOLOCATION_API_URL, GOOGLE_GEOLOCATION_API_KEY);
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -59,13 +57,13 @@ public class WeatherApi {
 
         JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
         JsonObject location = jsonObject.getAsJsonObject("location");
-        double latitude = location.get("lat").getAsDouble();
-        double longitude = location.get("lng").getAsDouble();
+        String latitude = location.get("lat").getAsString();
+        String longitude = location.get("lng").getAsString();
 
-        return new double[]{latitude, longitude};
+        return new String[]{latitude, longitude};
     }
 
-    public static WeatherCustomData getCurrentWeather(double latitude, double longitude) throws IOException {
+    public static WeatherCustomData getCurrentWeather(String latitude, String longitude) throws IOException {
         String apiUrl = String.format(OPENWEATHERMAP_API_URL, latitude, longitude, OPENWEATHERMAP_API_KEY);
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
