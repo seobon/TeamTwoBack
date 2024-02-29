@@ -152,7 +152,7 @@ public class DiaryService {
 
         if (page == null) {
             List<DiaryEntity> getEveryDiaryData;
-            getEveryDiaryData = diaryRepository.findByIsPublic(isPublic);
+            getEveryDiaryData = diaryRepository.findByIsPublicOrderByCreatedAtDesc(isPublic);
 
             if (!getEveryDiaryData.isEmpty()) {
                 for (DiaryEntity DiaryData : getEveryDiaryData) {
@@ -251,7 +251,7 @@ public class DiaryService {
         List<DiaryUserDTO> searchResult = new ArrayList<>();
 
         if (page == null) {
-            List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
+            List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContainingOrderByCreatedAtDesc(diaryTitle, diaryContent);
 
             if (!searchData.isEmpty()) {
                 for (DiaryEntity DiaryData : searchData) {
