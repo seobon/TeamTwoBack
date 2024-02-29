@@ -19,10 +19,10 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
     DiaryEntity findByDiaryId(Integer diaryId);
 
     // getEveryDiary
-    List<DiaryEntity> findByIsPublic(boolean isPublic);
+    List<DiaryEntity> findByIsPublicOrderByCreatedAtDesc(boolean isPublic);
     Page<DiaryEntity> findByIsPublic(boolean isPublic, Pageable pageRequest);
 
     // search
-    List<DiaryEntity> findByDiaryTitleContainingOrDiaryContentContaining(String diaryTitle, String diaryContent);
+    List<DiaryEntity> findByDiaryTitleContainingOrDiaryContentContainingOrderByCreatedAtDesc(String diaryTitle, String diaryContent);
     Page<DiaryEntity> findByDiaryTitleContainingOrDiaryContentContaining(String diaryTitle, String diaryContent, Pageable pageRequest);
 }
