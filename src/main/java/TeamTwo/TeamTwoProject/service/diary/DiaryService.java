@@ -131,12 +131,6 @@ public class DiaryService {
             throw new RuntimeException("Post Diary Error : 현재 위치정보를 가져오지 못했습니다.");
         }
 
-//        String locationString = "37.566295, 126.977945";
-//        String[] coordinates = locationString.split(", ");
-//        double latitude = Double.parseDouble(coordinates[0]);
-//        double longitude = Double.parseDouble(coordinates[1]);
-//        double[] location = {latitude, longitude};
-
         UserEntity userData = userRepository.findById(diaryDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         DiaryEntity postDiaryData = DiaryEntity.builder()
@@ -158,7 +152,7 @@ public class DiaryService {
 
         if (page == null) {
             List<DiaryEntity> getEveryDiaryData;
-            getEveryDiaryData = diaryRepository.findByIsPublic(isPublic);
+            getEveryDiaryData = diaryRepository.findByIsPublicOrderByCreatedAtDesc(isPublic);
 
             if (!getEveryDiaryData.isEmpty()) {
                 for (DiaryEntity DiaryData : getEveryDiaryData) {
@@ -231,6 +225,8 @@ public class DiaryService {
                     .diaryId(getOneDiaryData.getDiaryId())
                     .diaryTitle(getOneDiaryData.getDiaryTitle())
                     .diaryContent(getOneDiaryData.getDiaryContent())
+                    .mood(getOneDiaryData.getMood())
+                    .weather(getOneDiaryData.getWeather())
                     .likey(getOneDiaryLikeyData.size())
                     .love(getOneDiaryLoveData.size())
                     .haha(getOneDiaryHahaData.size())
@@ -255,7 +251,7 @@ public class DiaryService {
         List<DiaryUserDTO> searchResult = new ArrayList<>();
 
         if (page == null) {
-            List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContaining(diaryTitle, diaryContent);
+            List<DiaryEntity> searchData = diaryRepository.findByDiaryTitleContainingOrDiaryContentContainingOrderByCreatedAtDesc(diaryTitle, diaryContent);
 
             if (!searchData.isEmpty()) {
                 for (DiaryEntity DiaryData : searchData) {
@@ -317,7 +313,7 @@ public class DiaryService {
                 .diaryContent(Optional.ofNullable(diaryDTO.getDiaryContent()).orElse(OriginDiaryData.getDiaryContent()))
                 .mood(Optional.ofNullable(diaryDTO.getMood()).orElse(OriginDiaryData.getMood()))
                 .createdAt(OriginDiaryData.getCreatedAt())
-                .currentLocation(Optional.ofNullable(diaryDTO.getCurrentLocation()).orElse(OriginDiaryData.getCurrentLocation()))
+                .currentLocation(OriginDiaryData.getCurrentLocation())
                 .weather(Optional.ofNullable(diaryDTO.getWeather()).orElse(OriginDiaryData.getWeather()))
                 .isPublic(Optional.of(diaryDTO.isPublic()).orElse(OriginDiaryData.isPublic()))
                 .build();
