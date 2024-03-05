@@ -29,11 +29,11 @@ public class EmailController {
     public ResponseEntity<String> sendUserId(@RequestBody EmailPostDTO emailPostDTO) {
         try {
             emailService.findUserId(emailPostDTO.getEmail());
-            return new ResponseEntity<>("사용자 아이디가 이메일로 전송됨...", HttpStatus.OK);
+            return new ResponseEntity<>("사용자 아이디가 이메일로 전송되었습니다.", HttpStatus.OK);
         } catch (IllegalStateException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>("이메일 전송에 실패함!!", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("이메일 전송에 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
