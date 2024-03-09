@@ -88,6 +88,7 @@ public class UserController {
             if (user == null) {
                 throw new RuntimeException("로그인 실패");
             }
+            // 토큰 생성
             String accessToken = tokenProvider.createAccessToken(user);
             String refreshToken = tokenProvider.createRefreshToken(user);
 

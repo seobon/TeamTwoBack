@@ -18,13 +18,13 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
-
+    // 비밀번호 찾기
     @PostMapping("/resetPassword")
     public void sendNewPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         emailService.resetPassword(email);
     }
-
+    // 아이디 찾기
     @PostMapping("/findUserId")
     public ResponseEntity<String> sendUserId(@RequestBody EmailPostDTO emailPostDTO) {
         try {

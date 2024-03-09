@@ -50,10 +50,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // 아이디 중복확인
     public boolean checkId(String userid) {
         return Optional.ofNullable( userRepository.findByUserid(userid)).isPresent();
     }
-
+    // 닉네임 중복확인
     public boolean checkNickname(String nickname) {
         return Optional.ofNullable(userRepository.findByNickname(nickname)).isPresent();
     }
