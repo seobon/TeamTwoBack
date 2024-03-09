@@ -128,7 +128,7 @@ public class DiaryController {
         }
     }
     
-
+//
 //    // 타인의 다이어리에 반응하기
 //    @PatchMapping("/reaction")
 //    public ResponseEntity reaction(@RequestBody ReactionDTO reactionDTO){
@@ -138,6 +138,6 @@ public class DiaryController {
 //        } catch (Exception e) {
 //            return ResponseEntity.badRequest().body(e.getMessage());
 //        }
-
-    }
+//
+//    }
 }
